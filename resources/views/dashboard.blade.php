@@ -1,74 +1,160 @@
+<style>
+    .biblioteca{
+        font-size: 3rem;
+        line-height: 1.2;
+        padding-bottom: 1rem;
+    }
+    .hover-card {
+        background: white;
+        border-radius: 3rem;
+        border: 2px solid #234fa7;
+        box-shadow: 5px 10px 15px -3px rgb(168, 168, 168);
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .hover-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .card{
+        border-radius: 1rem;
+        border: 2px solid #234fa7;
+        box-shadow: 5px 10px 15px -3px rgb(168, 168, 168);
+    }
+    .card-title{
+        padding: 1rem
+    }
+    .btn-limpar {
+        width: 200px;
+        background-color: #1f2937 !important; /* gray-800 */
+        color: white !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid #374151 !important; /* gray-700 */
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+    }
+    
+    .btn-limpar:hover {
+        background-color: #111827 !important; /* gray-900 */
+        transform: translateY(-2px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    }
+</style>
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="flex flex-col items-center w-full gap-8">
+            <!-- TÍTULO COM FONTE MAIOR -->
+            <h1 class="text-5xl font-bold text-center text-white biblioteca">
+                {{ __('Biblioteca') }}
+            </h1>
             
-            <!-- MENUS COM TABS FUNCIONAIS -->
-            <div class="bg-base-100 rounded-lg shadow-lg mb-8">
-                <div class="tabs tabs-boxed bg-base-200 p-2" id="mainTabs">
-                    <a class="tab tab-active" onclick="showTab('livros')">📚 Livros</a>
-                    <a class="tab" onclick="showTab('autores')">✍️ Autores</a>
-                    <a class="tab" onclick="showTab('editoras')">🏢 Editoras</a>
+            <!-- TABS COMO CARDS INDIVIDUAIS -->
+            <div class="flex flex-wrap justify-center gap-6" id="mainTabs">
+                <!-- CARD LIVROS -->
+                <div class="hover-card w-48" onclick="showTab('livros')">
+                    <div class="card-body text-center p-6">
+                        <div class="text-4xl mb-3">📚</div>
+                        <h3 class="card-title justify-center text-lg font-semibold text-gray-800">Livros</h3>
+                    </div>
+                </div>
+
+                <!-- CARD AUTORES -->
+                <div class="hover-card w-48" onclick="showTab('autores')">
+                    <div class="card-body text-center p-6">
+                        <div class="text-4xl mb-3">✍️</div>
+                        <h3 class="card-title justify-center text-lg font-semibold text-gray-800">Autores</h3>
+                    </div>
+                </div>
+
+                <!-- CARD EDITORAS -->
+                <div class="hover-card w-48" onclick="showTab('editoras')">
+                    <div class="card-body text-center p-6">
+                        <div class="text-4xl mb-3">🏢</div>
+                        <h3 class="card-title justify-center text-lg font-semibold text-gray-800">Editoras</h3>
+                    </div>
                 </div>
             </div>
+        </div>
+    </x-slot>
+
+    <div class="py-6 bg-white-100">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <!-- ========== SEARCH AVANÇADA - LIVROS ========== -->
             <div id="tab-livros">
                 <!-- CARD DE PESQUISA AVANÇADA -->
-                <div class="card bg-base-100 shadow-lg mb-6">
+                <div class="card bg-white shadow-lg mb-6">
                     <div class="card-body">
-                        <h2 class="card-title">📚 Gestão de Livros</h2>
+                        
                         
                         <!-- BARRA DE PESQUISA PRINCIPAL -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                            <div class="flex-1 relative">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-4 items-center">
+                            <div class="flex-1 relative" style="padding: 1rem;">
                                 <label class="input input-bordered flex items-center gap-2">
                                     <input type="text" 
-                                           class="grow" 
-                                           placeholder="Pesquisar por Nome, ISBN, Autor..." 
-                                           id="search-livros"
-                                           onkeyup="debouncedSearch('livros', this.value)"/>
-                                    
+                                        class="grow" 
+                                        placeholder="Pesquisar por Nome, ISBN, Autor..." 
+                                        id="search-livros"
+                                        onkeyup="debouncedSearch('livros', this.value)"/>
                                 </label>
                                 <!-- SUGESTÕES -->
-                                <div id="suggestions-livros" class="absolute z-10 w-full mt-1 bg-base-100 border rounded-lg shadow-lg hidden"></div>
-                                    </div>
-                                    <button class="btn btn-outline" onclick="clearSearch('livros')">
+                                <div id="suggestions-livros" class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg hidden">
+                                </div>
+                            </div>
+                                
+                                <!-- BOTÃO CENTRALIZADO VERTICALMENTE -->
+                                <div class="flex justify-center sm:justify-start">
+                                    <button class="btn-limpar" onclick="clearSearch('livros')">
                                         Limpar
                                     </button>
                                 </div>
+                        </div>
 
                         <!-- FILTROS AVANÇADOS -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <select class="select select-bordered" onchange="filterTable('livros', this.value, 'editora')">
-                                <option value="">Todas as editoras</option>
-                                <option value="Editora Leya">Editora Leya</option>
-                                <option value="Porto Editora">Porto Editora</option>
-                                <option value="Penguin">Penguin</option>
-                            </select>
-                            
-                            <select class="select select-bordered" onchange="filterTable('livros', this.value, 'preco')">
-                                <option value="">Qualquer preço</option>
-                                <option value="0-20">€0 - €20</option>
-                                <option value="20-40">€20 - €40</option>
-                                <option value="40+">€40+</option>
-                            </select>
-                            
-                            <select class="select select-bordered" onchange="filterTable('livros', this.value, 'autor')">
-                                <option value="">Todos os autores</option>
-                                <option value="J.R.R. Tolkien">J.R.R. Tolkien</option>
-                                <option value="George Orwell">George Orwell</option>
-                                <option value="Miguel de Cervantes">Miguel de Cervantes</option>
-                            </select>
+                        <div class="flex justify-center mb-8">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
+                                <div class="flex flex-col">
+                                    <label class="text-sm font-semibold text-gray-700 mb-2">Editora</label>
+                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200" onchange="filterTable('livros', this.value, 'editora')">
+                                        <option value="">Todas as editoras</option>
+                                        <option value="Editora Leya">Editora Leya</option>
+                                        <option value="Porto Editora">Porto Editora</option>
+                                        <option value="Penguin">Penguin</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="flex flex-col">
+                                    <label class="text-sm font-semibold text-gray-700 mb-2">Preço</label>
+                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200" onchange="filterTable('livros', this.value, 'preco')">
+                                        <option value="">Qualquer preço</option>
+                                        <option value="0-20">€0 - €20</option>
+                                        <option value="20-40">€20 - €40</option>
+                                        <option value="40+">€40+</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="flex flex-col">
+                                    <label class="text-sm font-semibold text-gray-700 mb-2">Autor</label>
+                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200" onchange="filterTable('livros', this.value, 'autor')">
+                                        <option value="">Todos os autores</option>
+                                        <option value="J.R.R. Tolkien">J.R.R. Tolkien</option>
+                                        <option value="George Orwell">George Orwell</option>
+                                        <option value="Miguel de Cervantes">Miguel de Cervantes</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- CONTADOR DE RESULTADOS -->
-                        <div class="flex justify-between items-center text-sm">
+                        <div class="flex justify-between items-center text-sm" style="padding: 1rem;">
                             <span id="result-count-livros" class="text-base-content/70">
                                 Mostrando todos os livros
                             </span>
@@ -80,7 +166,7 @@
                 </div>
 
                 <!-- TABELA LIVROS -->
-                <div class="card bg-base-100 shadow-xl">
+                <div class="card bg-white shadow-xl">
                     <div class="card-body">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="card-title">📚 Gestão de Livros</h2>
@@ -140,14 +226,14 @@
             </div>
 
             <!-- ========== TABELA AUTORES ========== -->
-                <div id="tab-autores" class="card bg-base-100 shadow-xl hidden">
+                <div id="tab-autores" class="card bg-white shadow-xl hidden">
                     <div class="card-body">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="card-title">✍️ Gestão de Autores</h2>
                         </div>
 
                         <!-- BARRA DE PESQUISA - AUTORES -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
                             <div class="flex-1">
                                 <label class="input input-bordered flex items-center gap-2">
                                     <input type="text" class="grow" placeholder="Pesquisar autores..." 
@@ -235,14 +321,14 @@
                 </div>
 
                 <!-- ========== TABELA EDITORAS ========== -->
-                <div id="tab-editoras" class="card bg-base-100 shadow-xl hidden">
+                <div id="tab-editoras" class="card bg-white shadow-xl hidden">
                     <div class="card-body">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="card-title">🏢 Gestão de Editoras</h2>
                         </div>
 
                         <!-- BARRA DE PESQUISA - EDITORAS -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
                             <div class="flex-1">
                                 <label class="input input-bordered flex items-center gap-2">
                                     <input type="text" class="grow" placeholder="Pesquisar editoras..." 
