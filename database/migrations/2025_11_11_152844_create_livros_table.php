@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('livros', function (Blueprint $table) {
             $table->id();
-            $table->text('isbn'); // TEXT para dados cifrados (ficam maiores)
+            $table->text('isbn'); // TEXT para dados cifrados
             $table->string('nome');
             $table->foreignId('editora_id')->constrained()->onDelete('cascade');
             $table->text('bibliografia'); // TEXT para dados cifrados

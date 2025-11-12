@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('autor_livro', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('autor_id')->constrained('autors')->onDelete('cascade'); // ← MUDADO: 'autors'
+            $table->foreignId('autor_id')->constrained('autors')->onDelete('cascade'); 
             $table->foreignId('livro_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

@@ -27,10 +27,10 @@
     }
     .btn-limpar {
         width: 200px;
-        background-color: #1f2937 !important; /* gray-800 */
+        background-color: #1f2937 !important;
         color: white !important;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-        border: 1px solid #374151 !important; /* gray-700 */
+        border: 1px solid #374151 !important;
         border-radius: 0.5rem;
         padding: 0.75rem 1.5rem;
         font-weight: 600;
@@ -43,22 +43,111 @@
     }
     
     .btn-limpar:hover {
-        background-color: #111827 !important; /* gray-900 */
+        background-color: #111827 !important;
         transform: translateY(-2px);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     }
+
+    /* Estilos para as imagens */
+    .book-cover {
+        width: 48px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 4px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .book-cover:hover {
+        transform: scale(1.1);
+    }
+
+    .author-photo {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .author-photo:hover {
+        transform: scale(1.05);
+    }
+
+    .author-photo-container {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+    }
+
+    .publisher-logo {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+        background: white;
+        padding: 8px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .publisher-logo:hover {
+        transform: scale(1.05);
+    }
+
+    .publisher-logo-container {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+        font-weight: bold;
+        color: #374151;
+    }
+
+    /* Estilos responsivos */
+    .mobile-book-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: white;
+    }
+
+    .mobile-book-cover {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .author-photo,
+        .author-photo-container,
+        .publisher-logo,
+        .publisher-logo-container {
+            width: 120px;
+            height: 120px;
+        }
+    }
 </style>
+
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col items-center w-full gap-8">
-            <!-- TÍTULO COM FONTE MAIOR -->
             <h1 class="text-5xl font-bold text-center text-white biblioteca">
                 {{ __('Biblioteca') }}
             </h1>
             
-            <!-- TABS COMO CARDS INDIVIDUAIS -->
             <div class="flex flex-wrap justify-center gap-6" id="mainTabs">
-                <!-- CARD LIVROS -->
                 <div class="hover-card w-48" onclick="showTab('livros')">
                     <div class="card-body text-center p-6">
                         <div class="text-4xl mb-3">📚</div>
@@ -66,7 +155,6 @@
                     </div>
                 </div>
 
-                <!-- CARD AUTORES -->
                 <div class="hover-card w-48" onclick="showTab('autores')">
                     <div class="card-body text-center p-6">
                         <div class="text-4xl mb-3">✍️</div>
@@ -74,7 +162,6 @@
                     </div>
                 </div>
 
-                <!-- CARD EDITORAS -->
                 <div class="hover-card w-48" onclick="showTab('editoras')">
                     <div class="card-body text-center p-6">
                         <div class="text-4xl mb-3">🏢</div>
@@ -88,14 +175,10 @@
     <div class="py-6 bg-white-100">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <!-- ========== SEARCH AVANÇADA - LIVROS ========== -->
+            <!-- ========== TAB LIVROS ========== -->
             <div id="tab-livros">
-                <!-- CARD DE PESQUISA AVANÇADA -->
                 <div class="card bg-white shadow-lg mb-6">
                     <div class="card-body">
-                        
-                        
-                        <!-- BARRA DE PESQUISA PRINCIPAL -->
                         <div class="flex flex-col sm:flex-row gap-4 mb-4 items-center">
                             <div class="flex-1 relative" style="padding: 1rem;">
                                 <label class="input input-bordered flex items-center gap-2">
@@ -105,20 +188,16 @@
                                         id="search-livros"
                                         onkeyup="debouncedSearch('livros', this.value)"/>
                                 </label>
-                                <!-- SUGESTÕES -->
                                 <div id="suggestions-livros" class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg hidden">
                                 </div>
                             </div>
-                                
-                                <!-- BOTÃO CENTRALIZADO VERTICALMENTE -->
-                                <div class="flex justify-center sm:justify-start">
-                                    <button class="btn-limpar" onclick="clearSearch('livros')">
-                                        Limpar
-                                    </button>
-                                </div>
+                            <div class="flex justify-center sm:justify-start">
+                                <button class="btn-limpar" onclick="clearSearch('livros')">
+                                    Limpar
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- FILTROS AVANÇADOS -->
                         <div class="flex justify-center mb-8">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
                                 <div class="flex flex-col">
@@ -127,7 +206,7 @@
                                         <option value="">Todas as editoras</option>
                                         <option value="Editora Leya">Editora Leya</option>
                                         <option value="Porto Editora">Porto Editora</option>
-                                        <option value="Penguin">Penguin</option>
+                                        <option value="Penguin Random House">Penguin Random House</option>
                                     </select>
                                 </div>
                                 
@@ -148,12 +227,12 @@
                                         <option value="J.R.R. Tolkien">J.R.R. Tolkien</option>
                                         <option value="George Orwell">George Orwell</option>
                                         <option value="Miguel de Cervantes">Miguel de Cervantes</option>
+                                        <option value="Umberto Eco">Umberto Eco</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- CONTADOR DE RESULTADOS -->
                         <div class="flex justify-between items-center text-sm" style="padding: 1rem;">
                             <span id="result-count-livros" class="text-base-content/70">
                                 Mostrando todos os livros
@@ -165,50 +244,43 @@
                     </div>
                 </div>
 
-                <!-- TABELA LIVROS -->
                 <div class="card bg-white shadow-xl">
                     <div class="card-body">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="card-title">📚 Gestão de Livros</h2>
+                            <div class="lg:hidden">
+                                <span class="text-sm text-gray-500">↔ Deslize para ver mais</span>
+                            </div>
                         </div>
                         
-                        <div class="overflow-x-auto">
+                        <!-- Versão Desktop -->
+                        <div class="hidden lg:block overflow-x-auto">
                             <table class="table table-zebra" id="table-livros">
                                 <thead>
                                     <tr>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 0)">
-                                            ID <span id="sort-livros-0">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 1)">
-                                            ISBN <span id="sort-livros-1">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 2)">
-                                            Nome <span id="sort-livros-2">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 3)">
-                                            Editora <span id="sort-livros-3">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 4)">
-                                            Autores <span id="sort-livros-4">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 5)">
-                                            Bibliografia <span id="sort-livros-5">↕</span>
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" >
-                                            Capa
-                                        </th>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 6)">
-                                            Preço <span id="sort-livros-6">↕</span>
-                                        </th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 0)">ID <span id="sort-livros-0">↕</span></th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 1)">ISBN <span id="sort-livros-1">↕</span></th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 2)">Nome <span id="sort-livros-2">↕</span></th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 3)">Editora <span id="sort-livros-3">↕</span></th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 4)">Autores <span id="sort-livros-4">↕</span></th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 5)">Bibliografia <span id="sort-livros-5">↕</span></th>
+                                        <th>Capa</th>
+                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('livros', 6)">Preço <span id="sort-livros-6">↕</span></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-livros">
-                                    <!-- Dados serão preenchidos via JavaScript -->
+                                    <!-- Dados preenchidos via JavaScript -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- ESTADO VAZIO -->
+                        <!-- Versão Mobile -->
+                        <div class="lg:hidden" id="mobile-livros-container">
+                            <div id="mobile-livros-list">
+                                <!-- Cards móveis serão gerados via JavaScript -->
+                            </div>
+                        </div>
+
                         <div id="empty-state-livros" class="text-center py-8 hidden">
                             <div class="text-gray-500">
                                 <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,210 +288,79 @@
                                 </svg>
                                 <p class="text-lg mb-2">Nenhum livro encontrado</p>
                                 <p class="text-sm mb-4">Tente ajustar os filtros ou termos de pesquisa</p>
-                                <button class="btn btn-primary" onclick="clearSearch('livros')">
-                                    Limpar pesquisa
-                                </button>
+                                <button class="btn btn-primary" onclick="clearSearch('livros')">Limpar pesquisa</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ========== TABELA AUTORES ========== -->
-                <div id="tab-autores" class="card bg-white shadow-xl hidden">
-                    <div class="card-body">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="card-title">✍️ Gestão de Autores</h2>
-                        </div>
+            <!-- ========== TAB AUTORES ========== -->
+            <div id="tab-autores" class="card bg-white shadow-xl hidden">
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">✍️ Gestão de Autores</h2>
+                    </div>
 
-                        <!-- BARRA DE PESQUISA - AUTORES -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
-                            <div class="flex-1">
-                                <label class="input input-bordered flex items-center gap-2">
-                                    <input type="text" class="grow" placeholder="Pesquisar autores..." 
-                                        onkeyup="searchTable('autores', this.value)"/>
-                                </label>
-                            </div>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
+                        <div class="flex-1">
+                            <label class="input input-bordered flex items-center gap-2">
+                                <input type="text" class="grow" placeholder="Pesquisar autores..." onkeyup="searchTable('autores', this.value)"/>
+                            </label>
                         </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="table table-zebra" id="table-autores">
-                                <thead>
-                                    <tr>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('autores', 0)">
-                                            Nome <span id="sort-autores-0">↕</span>
-                                        </th>
-                                        <th>Foto</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-autores">
-                                    <!-- Dados de exemplo -->
-                                    <tr>
-                                        <td class="font-semibold">J.R.R. Tolkien</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👨‍💼</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">George Orwell</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👨‍🎓</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Miguel de Cervantes</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👨‍⚔️</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">José Saramago</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👴</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Clarice Lispector</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👩‍💼</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Umberto Eco</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm">👨‍🏫</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra" id="table-autores">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('autores', 0)">Nome <span id="sort-autores-0">↕</span></th>
+                                    <th>Foto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-autores">
+                                <!-- Dados preenchidos via JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <!-- ========== TABELA EDITORAS ========== -->
-                <div id="tab-editoras" class="card bg-white shadow-xl hidden">
-                    <div class="card-body">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="card-title">🏢 Gestão de Editoras</h2>
-                        </div>
+            <!-- ========== TAB EDITORAS ========== -->
+            <div id="tab-editoras" class="card bg-white shadow-xl hidden">
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="card-title">🏢 Gestão de Editoras</h2>
+                    </div>
 
-                        <!-- BARRA DE PESQUISA - EDITORAS -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
-                            <div class="flex-1">
-                                <label class="input input-bordered flex items-center gap-2">
-                                    <input type="text" class="grow" placeholder="Pesquisar editoras..." 
-                                        onkeyup="searchTable('editoras', this.value)"/>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="table table-zebra" id="table-editoras">
-                                <thead>
-                                    <tr>
-                                        <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('editoras', 0)">
-                                            Nome <span id="sort-editoras-0">↕</span>
-                                        </th>
-                                        <th>Logótipo</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-editoras">
-                                    <!-- Dados de exemplo -->
-                                    <tr>
-                                        <td class="font-semibold">Editora Leya</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-base-200 flex items-center justify-center">
-                                                    <span class="text-sm font-bold">L</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Porto Editora</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-blue-100 flex items-center justify-center">
-                                                    <span class="text-sm font-bold text-blue-600">P</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Penguin Random House</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-orange-100 flex items-center justify-center">
-                                                    <span class="text-sm font-bold text-orange-600">🐧</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Bertrand Editora</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-red-100 flex items-center justify-center">
-                                                    <span class="text-sm font-bold text-red-600">B</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Gradiva</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-green-100 flex items-center justify-center">
-                                                    <span class="text-sm font-bold text-green-600">G</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="font-semibold">Dom Quixote</td>
-                                        <td>
-                                            <div class="avatar">
-                                                <div class="w-12 h-12 rounded bg-purple-100 flex items-center justify-center">
-                                                    <span class="text-sm font-bold text-purple-600">DQ</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
+                        <div class="flex-1">
+                            <label class="input input-bordered flex items-center gap-2">
+                                <input type="text" class="grow" placeholder="Pesquisar editoras..." onkeyup="searchTable('editoras', this.value)"/>
+                            </label>
                         </div>
                     </div>
-                </div>  
-
+                    
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra" id="table-editoras">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('editoras', 0)">Nome <span id="sort-editoras-0">↕</span></th>
+                                    <th>Logótipo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-editoras">
+                                <!-- Dados preenchidos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>  
         </div>
     </div>
 
     <script>
-    // Dados de exemplo para todas as tabelas
+    // Dados REAIS com imagens
     const livrosData = [
         {
             id: 1,
@@ -429,26 +370,29 @@
             autores: ['J.R.R. Tolkien'],
             bibliografia: 'Uma jornada épica pela Terra Média onde a Sociedade do Anel tenta destruir o Um Anel para salvar a Terra Média das trevas.',
             preco: '24.99',
+            capa_url: 'images/livros/senhor-dos-aneis.jpg',
             capa: '📖'
         },
         {
             id: 2,
-            isbn: '978-019-953-556-9',
+            isbn: '978-972-0-07061-0',
             nome: '1984',
-            editora: 'Penguin',
+            editora: 'Porto Editora',
             autores: ['George Orwell'],
             bibliografia: 'Um clássico da distopia sobre vigilância total e controle governamental numa sociedade futurista.',
             preco: '16.50',
+            capa_url: 'images/livros/1984.jpg',
             capa: '📖'
         },
         {
             id: 3,
             isbn: '978-972-004-732-5',
-            nome: 'Dom Quixote',
+            nome: 'Dom Quixote de La Mancha',
             editora: 'Porto Editora',
             autores: ['Miguel de Cervantes'],
             bibliografia: 'As aventuras do famoso cavaleiro andante e seu fiel escudeiro Sancho Pança pela Espanha.',
             preco: '19.99',
+            capa_url: 'images/livros/don-quixote.jpg',
             capa: '📖'
         },
         {
@@ -456,49 +400,38 @@
             isbn: '978-972-004-823-0',
             nome: 'O Nome da Rosa',
             editora: 'Editora Leya',
-            autores: ['Umberto Eco', 'Jorge Luis Borges'],
+            autores: ['Umberto Eco'],
             bibliografia: 'Mistério medieval num mosteiro beneditino onde uma série de crimes acontece na biblioteca.',
             preco: '22.75',
+            capa_url: 'images/livros/nome-da-rosa.jpg',
             capa: '📖'
         }
     ];
 
     const autoresData = [
-        { nome: 'J.R.R. Tolkien', foto: '👨‍💼' },
-        { nome: 'George Orwell', foto: '👨‍🎓' },
-        { nome: 'Miguel de Cervantes', foto: '👨‍⚔️' },
-        { nome: 'José Saramago', foto: '👴' },
-        { nome: 'Clarice Lispector', foto: '👩‍💼' },
-        { nome: 'Umberto Eco', foto: '👨‍🏫' }
+        { nome: 'J.R.R. Tolkien', foto_url: 'images/autores/jrr-tolkien.jpg' },
+        { nome: 'George Orwell', foto_url: 'images/autores/george-orwell.jpg' },
+        { nome: 'Miguel de Cervantes', foto_url: 'images/autores/miguel-de-cervantes.jpg' },
+        { nome: 'José Saramago', foto_url: 'images/autores/jose-saramago.jpg' },
+        { nome: 'Umberto Eco', foto_url: 'images/autores/umberto-eco.jpg' }
     ];
 
     const editorasData = [
-        { nome: 'Editora Leya', logo: 'L', cor: 'base' },
-        { nome: 'Porto Editora', logo: 'P', cor: 'blue' },
-        { nome: 'Penguin Random House', logo: '🐧', cor: 'orange' },
-        { nome: 'Bertrand Editora', logo: 'B', cor: 'red' },
-        { nome: 'Gradiva', logo: 'G', cor: 'green' },
-        { nome: 'Dom Quixote', logo: 'DQ', cor: 'purple' }
+        { nome: 'Porto Editora', logo_url: 'images/editoras/porto-editora.jpg' },
+        { nome: 'Penguin Random House', logo_url: 'images/editoras/penguin.jpg' },
+        { nome: 'Editora Leya', logo_url: 'images/editoras/leya.jpg' },
+        { nome: 'Bertrand Editora', logo_url: 'images/editoras/bertrand.jpg' }
     ];
 
     // Variáveis de estado
-    let currentSearch = {
-        livros: '',
-        autores: '',
-        editoras: ''
-    };
-
-    let currentFilters = {
-        livros: {},
-        autores: {},
-        editoras: {}
-    };
-
+    let currentSearch = { livros: '', autores: '', editoras: '' };
+    let currentFilters = { livros: {}, autores: {}, editoras: {} };
     let currentSort = { table: null, column: null, direction: 'asc' };
 
-    // Inicializar todas as tabelas
+    // Inicializar ambas as versões
     document.addEventListener('DOMContentLoaded', function() {
         renderTable('livros', livrosData);
+        renderMobileLivros(livrosData);
         renderTable('autores', autoresData);
         renderTable('editoras', editorasData);
         updateResultCount('livros', livrosData.length);
@@ -585,12 +518,16 @@
             });
         }
         
+        // Renderizar ambas as versões (desktop e mobile)
         renderTable(tableType, filteredData);
+        if (tableType === 'livros') {
+            renderMobileLivros(filteredData);
+        }
         updateResultCount(tableType, filteredData.length);
         updateActiveFilters(tableType);
     }
 
-    // Renderizar tabela
+    // Renderizar tabela desktop
     function renderTable(tableType, data) {
         const tbody = document.getElementById(`tbody-${tableType}`);
         const emptyState = document.getElementById(`empty-state-${tableType}`);
@@ -605,7 +542,10 @@
         
         switch(tableType) {
             case 'livros':
-                tbody.innerHTML = data.map(livro => `
+                tbody.innerHTML = data.map(livro => {
+                    const hasImage = livro.capa_url && livro.capa_url !== 'null' && livro.capa_url !== '';
+                    
+                    return `
                     <tr>
                         <td>${livro.id}</td>
                         <td class="font-mono text-sm">${livro.isbn}</td>
@@ -619,62 +559,150 @@
                         <td class="text-sm text-base-content/70 max-w-[200px]">${livro.bibliografia}</td>
                         <td>
                             <div class="avatar">
-                                <div class="w-12 h-16 rounded bg-base-200 flex items-center justify-center">
-                                    <span class="text-xs">${livro.capa}</span>
+                                <div class="w-12 h-16 rounded bg-base-200 flex items-center justify-center overflow-hidden">
+                                    ${hasImage ? 
+                                        `<img src="${livro.capa_url}" 
+                                              alt="Capa de ${livro.nome}" 
+                                              class="book-cover"
+                                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                         <div class="w-full h-full flex items-center justify-center hidden">
+                                             <span class="text-xs">${livro.capa}</span>
+                                         </div>` 
+                                        : `<span class="text-xs">${livro.capa}</span>`
+                                    }
                                 </div>
                             </div>
                         </td>
                         <td class="font-semibold">€${livro.preco}</td>
                     </tr>
-                `).join('');
+                `}).join('');
                 break;
                 
             case 'autores':
-                tbody.innerHTML = data.map(autor => `
-                    <tr>
-                        <td class="font-semibold">${autor.nome}</td>
-                        <td>
-                            <div class="avatar">
-                                <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center">
-                                    <span class="text-sm">${autor.foto}</span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-                break;
-                
-            case 'editoras':
-                tbody.innerHTML = data.map(editora => {
-                    const colorClass = editora.cor === 'base' ? 'bg-base-200' : `bg-${editora.cor}-100`;
-                    const textClass = editora.cor === 'base' ? '' : `text-${editora.cor}-600`;
+                tbody.innerHTML = data.map(autor => {
+                    const hasPhoto = autor.foto_url && autor.foto_url !== 'null' && autor.foto_url !== '';
+                    
                     return `
-                    <tr>
-                        <td class="font-semibold">${editora.nome}</td>
-                        <td>
-                            <div class="avatar">
-                                <div class="w-12 h-12 rounded ${colorClass} flex items-center justify-center">
-                                    <span class="text-sm font-bold ${textClass}">${editora.logo}</span>
-                                </div>
+                    <tr class="hover:bg-base-100">
+                        <td class="px-4 py-3 font-semibold text-lg">${autor.nome}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex justify-center">
+                                ${hasPhoto ? 
+                                    `<img src="${autor.foto_url}" 
+                                        alt="Foto de ${autor.nome}" 
+                                        class="author-photo"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="author-photo-container hidden">
+                                        <span class="text-4xl">👨‍💼</span>
+                                    </div>` 
+                                    : `<div class="author-photo-container">
+                                        <span class="text-4xl">👨‍💼</span>
+                                    </div>`
+                                }
                             </div>
                         </td>
                     </tr>
                 `}).join('');
-                break;
+            break;
+                
+            case 'editoras':
+                tbody.innerHTML = data.map(editora => {
+                    const hasLogo = editora.logo_url && editora.logo_url !== 'null' && editora.logo_url !== '';
+                    
+                    return `
+                    <tr class="hover:bg-base-100">
+                        <td class="px-4 py-3 font-semibold text-lg">${editora.nome}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex justify-center">
+                                ${hasLogo ? 
+                                    `<img src="${editora.logo_url}" 
+                                        alt="Logótipo de ${editora.nome}" 
+                                        class="publisher-logo"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="publisher-logo-container hidden">
+                                        <span class="text-2xl font-bold">${editora.nome.substring(0, 2)}</span>
+                                    </div>` 
+                                    : `<div class="publisher-logo-container">
+                                        <span class="text-2xl font-bold">${editora.nome.substring(0, 2)}</span>
+                                    </div>`
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                `}).join('');
+            break;
         }
+    }
+
+    // Renderizar versão mobile para livros
+    function renderMobileLivros(data) {
+        const container = document.getElementById('mobile-livros-list');
+        const emptyState = document.getElementById('empty-state-livros');
+        
+        if (data.length === 0) {
+            container.innerHTML = '';
+            if (emptyState) emptyState.classList.remove('hidden');
+            return;
+        }
+        
+        if (emptyState) emptyState.classList.add('hidden');
+        
+        container.innerHTML = data.map(livro => {
+            const hasImage = livro.capa_url && livro.capa_url !== 'null' && livro.capa_url !== '';
+            
+            return `
+            <div class="mobile-book-card">
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-20 rounded bg-base-200 flex items-center justify-center overflow-hidden border">
+                            ${hasImage ? 
+                                `<img src="${livro.capa_url}" 
+                                      alt="Capa de ${livro.nome}" 
+                                      class="mobile-book-cover"
+                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                 <div class="w-full h-full flex items-center justify-center hidden bg-base-300">
+                                     <span class="text-xs">${livro.capa}</span>
+                                 </div>` 
+                                : `<span class="text-xs">${livro.capa}</span>`
+                            }
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-sm truncate">${livro.nome}</h3>
+                        <p class="text-xs text-gray-600 mt-1">${livro.editora}</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${livro.autores.map(autor => `<span class="badge badge-xs">${autor}</span>`).join('')}
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="font-semibold text-sm">€${livro.preco}</span>
+                            <span class="text-xs text-gray-500">ISBN: ${livro.isbn}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `}).join('');
     }
 
     // Função para mostrar/ocultar tabs
     function showTab(tabName) {
+        // Esconder todas as tabs
         document.getElementById('tab-livros').classList.add('hidden');
         document.getElementById('tab-autores').classList.add('hidden');
         document.getElementById('tab-editoras').classList.add('hidden');
         
+        // Mostrar a tab selecionada
         document.getElementById('tab-' + tabName).classList.remove('hidden');
         
-        const tabs = document.querySelectorAll('#mainTabs .tab');
-        tabs.forEach(tab => tab.classList.remove('tab-active'));
-        event.target.classList.add('tab-active');
+        // Atualizar estado visual dos cards
+        const cards = document.querySelectorAll('#mainTabs .hover-card');
+        cards.forEach(card => {
+            card.classList.remove('bg-primary', 'text-primary-content');
+            card.classList.add('bg-white');
+        });
+        
+        // Destacar o card clicado
+        event.currentTarget.classList.remove('bg-white');
+        event.currentTarget.classList.add('bg-primary', 'text-primary-content');
     }
 
     // Função de ordenação
@@ -686,14 +714,12 @@
             case 'editoras': data = [...editorasData]; break;
         }
         
-        // Verificar se estamos a ordenar a mesma coluna para alternar direção
         if (currentSort.table === tableType && currentSort.column === columnIndex) {
             currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
         } else {
             currentSort = { table: tableType, column: columnIndex, direction: 'asc' };
         }
         
-        // Atualizar indicadores visuais
         updateSortIndicators(tableType, columnIndex);
         
         data.sort((a, b) => {
@@ -711,12 +737,10 @@
                     break;
             }
             
-            // Verificar se é número
             if (!isNaN(aValue) && !isNaN(bValue)) {
                 return currentSort.direction === 'asc' ? aValue - bValue : bValue - aValue;
             }
             
-            // Ordenação de texto
             return currentSort.direction === 'asc' 
                 ? String(aValue).localeCompare(String(bValue))
                 : String(bValue).localeCompare(String(aValue));
@@ -727,21 +751,19 @@
 
     // Atualizar indicadores visuais de ordenação
     function updateSortIndicators(tableType, columnIndex) {
-        // Resetar todos os indicadores desta tabela
         const maxColumns = tableType === 'livros' ? 8 : 2;
         for (let i = 0; i < maxColumns; i++) {
             const indicator = document.getElementById(`sort-${tableType}-${i}`);
             if (indicator) indicator.textContent = '↕';
         }
         
-        // Atualizar indicador da coluna atual
         const currentIndicator = document.getElementById(`sort-${tableType}-${columnIndex}`);
         if (currentIndicator) {
             currentIndicator.textContent = currentSort.direction === 'asc' ? '↑' : '↓';
         }
     }
 
-    // Função de filtragem (apenas para livros)
+    // Função de filtragem
     function filterTable(tableType, filterValue, filterType) {
         if (!filterValue) {
             delete currentFilters[tableType][filterType];
@@ -757,6 +779,11 @@
         currentFilters[tableType] = {};
         const searchInput = document.getElementById(`search-${tableType}`);
         if (searchInput) searchInput.value = '';
+        
+        // Resetar selects
+        const selects = document.querySelectorAll(`#tab-${tableType} select`);
+        selects.forEach(select => select.value = '');
+        
         applyFiltersAndSearch(tableType);
     }
 
@@ -792,5 +819,5 @@
             element.classList.add('hidden');
         }
     }
-</script>
+    </script>
 </x-app-layout>
