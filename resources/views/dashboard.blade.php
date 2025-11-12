@@ -47,6 +47,69 @@
         transform: translateY(-2px);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     }
+    /* Estilos para o botão de exportação */
+    #btn-exportar-csv {
+        width: 200px;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        border: 2px solid #059669 !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 2rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3) !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
+
+    #btn-exportar-csv:hover {
+        transform: translateY(2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4) !important;
+        background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+        border-color: #047857 !important;
+        color: white !important;
+    }
+
+    /* Garantir que o texto fique branco */
+    #btn-exportar-csv span {
+        color: white !important;
+    }
+
+    /* Loading animation para exportação */
+    .export-loading {
+        display: none;
+        animation: spin 1s linear infinite;
+    }
+
+    .export-loading.show {
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Melhorar responsividade do header */
+    @media (max-width: 1024px) {
+        .card-title {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1.25rem !important;
+            text-align: center;
+        }
+        
+        #btn-exportar-csv {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
 
     /* Estilos para as imagens */
     .book-cover {
@@ -245,14 +308,21 @@
                 </div>
 
                 <div class="card bg-white shadow-xl">
-                    <div class="card-body">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="card-title">📚 Gestão de Livros</h2>
-                            <div class="lg:hidden">
-                                <span class="text-sm text-gray-500">↔ Deslize para ver mais</span>
-                            </div>
-                        </div>
-                        
+    <div class="card-body">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
+            <h2 class="card-title text-2xl font-bold text-gray-800">📚 Gestão de Livros</h2>
+            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full lg:w-auto">
+                <!-- Botão Exportar CSV -->
+                <a href="{{ route('exportar.livros.csv') }}" 
+                   class="btn bg-green-600 hover:bg-green-700 border-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 w-full sm:w-auto justify-center"
+                   id="btn-exportar-csv">
+                    <span class="text-gray-800">📊 Exportar CSV</span>
+                </a>
+                <div class="lg:hidden text-center sm:text-left w-full sm:w-auto">
+                    <span class="text-sm text-gray-500">↔ Deslize horizontalmente</span>
+                </div>
+            </div>
+        </div>        
                         <!-- Versão Desktop -->
                         <div class="hidden lg:block overflow-x-auto">
                             <table class="table table-zebra" id="table-livros">
@@ -819,5 +889,43 @@
             element.classList.add('hidden');
         }
     }
+    // Função para mostrar loading durante a exportação
+    function setupExportButton() {
+        const exportButton = document.getElementById('btn-exportar-csv');
+        
+        if (exportButton) {
+            exportButton.addEventListener('click', function(e) {
+                const originalHTML = exportButton.innerHTML;
+                
+                // Mostrar loading
+                exportButton.innerHTML = '<span class="loading loading-spinner loading-sm"></span> A gerar CSV...';
+                exportButton.classList.add('btn-disabled');
+                exportButton.style.opacity = '0.7';
+                exportButton.style.pointerEvents = 'none';
+                
+                // Reset após 8 segundos (caso algo corra mal)
+                setTimeout(() => {
+                    exportButton.innerHTML = originalHTML;
+                    exportButton.classList.remove('btn-disabled');
+                    exportButton.style.opacity = '1';
+                    exportButton.style.pointerEvents = 'auto';
+                }, 8000);
+            });
+        }
+    }
+
+    // Inicializar quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        setupExportButton();
+        
+        // Sua inicialização existente...
+        renderTable('livros', livrosData);
+        renderMobileLivros(livrosData);
+        renderTable('autores', autoresData);
+        renderTable('editoras', editorasData);
+        updateResultCount('livros', livrosData.length);
+        updateResultCount('autores', autoresData.length);
+        updateResultCount('editoras', editorasData.length);
+    });
     </script>
 </x-app-layout>
