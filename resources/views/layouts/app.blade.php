@@ -16,6 +16,10 @@
 
         <!-- Styles -->
         @livewireStyles
+        @stack('styles')
+        @stack('scripts')
+
+
     </head>
     <body class="font-sans antialiased">
         <x-banner />

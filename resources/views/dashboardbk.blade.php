@@ -47,7 +47,71 @@
         transform: translateY(-2px);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
     }
+    /* Estilos para o botão de exportação */
+    #btn-exportar-csv {
+        width: 200px;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        border: 2px solid #059669 !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 2rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3) !important;
+        text-decoration: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
 
+    #btn-exportar-csv:hover {
+        transform: translateY(2px) !important;
+        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4) !important;
+        background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+        border-color: #047857 !important;
+        color: white !important;
+    }
+
+    /* Garantir que o texto fique branco */
+    #btn-exportar-csv span {
+        color: white !important;
+    }
+
+    /* Loading animation para exportação */
+    .export-loading {
+        display: none;
+        animation: spin 1s linear infinite;
+    }
+
+    .export-loading.show {
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* Melhorar responsividade do header */
+    @media (max-width: 1024px) {
+        .card-title {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 1.25rem !important;
+            text-align: center;
+        }
+        
+        #btn-exportar-csv {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+
+    /* Estilos para as imagens */
     .book-cover {
         width: 48px;
         height: 64px;
@@ -59,6 +123,7 @@
     .book-cover:hover {
         transform: scale(1.1);
     }
+
     .author-photo {
         width: 200px;
         height: 200px;
@@ -82,13 +147,7 @@
         border-radius: 8px;
         border: 2px solid #e5e7eb;
     }
-    @media (max-width: 768px) {
-        .author-photo,
-        .author-photo-container {
-            width: 120px;
-            height: 120px;
-        }
-    }
+
     .publisher-logo {
         width: 200px;
         height: 200px;
@@ -116,13 +175,32 @@
         font-weight: bold;
         color: #374151;
     }
-    @media (max-width: 768px) {
-    .publisher-logo,
-    .publisher-logo-container {
-        width: 120px;
-        height: 120px;
+
+    /* Estilos responsivos */
+    .mobile-book-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: white;
     }
-}
+
+    .mobile-book-cover {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .author-photo,
+        .author-photo-container,
+        .publisher-logo,
+        .publisher-logo-container {
+            width: 120px;
+            height: 120px;
+        }
+    }
 </style>
 
 <x-app-layout>
@@ -230,12 +308,23 @@
                 </div>
 
                 <div class="card bg-white shadow-xl">
-                    <div class="card-body">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="card-title">📚 Gestão de Livros</h2>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
+    <div class="card-body">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
+            <h2 class="card-title text-2xl font-bold text-gray-800">📚 Gestão de Livros</h2>
+            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full lg:w-auto">
+                <!-- Botão Exportar CSV -->
+                <a href="{{ route('exportar.livros.csv') }}" 
+                   class="btn bg-green-600 hover:bg-green-700 border-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 w-full sm:w-auto justify-center"
+                   id="btn-exportar-csv">
+                    <span class="text-gray-800">📊 Exportar CSV</span>
+                </a>
+                <div class="lg:hidden text-center sm:text-left w-full sm:w-auto">
+                    <span class="text-sm text-gray-500">↔ Deslize horizontalmente</span>
+                </div>
+            </div>
+        </div>        
+                        <!-- Versão Desktop -->
+                        <div class="hidden lg:block overflow-x-auto">
                             <table class="table table-zebra" id="table-livros">
                                 <thead>
                                     <tr>
@@ -253,6 +342,13 @@
                                     <!-- Dados preenchidos via JavaScript -->
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Versão Mobile -->
+                        <div class="lg:hidden" id="mobile-livros-container">
+                            <div id="mobile-livros-list">
+                                <!-- Cards móveis serão gerados via JavaScript -->
+                            </div>
                         </div>
 
                         <div id="empty-state-livros" class="text-center py-8 hidden">
@@ -402,9 +498,10 @@
     let currentFilters = { livros: {}, autores: {}, editoras: {} };
     let currentSort = { table: null, column: null, direction: 'asc' };
 
-    // Inicializar todas as tabelas
+    // Inicializar ambas as versões
     document.addEventListener('DOMContentLoaded', function() {
         renderTable('livros', livrosData);
+        renderMobileLivros(livrosData);
         renderTable('autores', autoresData);
         renderTable('editoras', editorasData);
         updateResultCount('livros', livrosData.length);
@@ -491,12 +588,16 @@
             });
         }
         
+        // Renderizar ambas as versões (desktop e mobile)
         renderTable(tableType, filteredData);
+        if (tableType === 'livros') {
+            renderMobileLivros(filteredData);
+        }
         updateResultCount(tableType, filteredData.length);
         updateActiveFilters(tableType);
     }
 
-    // Renderizar tabela COM IMAGENS REAIS
+    // Renderizar tabela desktop
     function renderTable(tableType, data) {
         const tbody = document.getElementById(`tbody-${tableType}`);
         const emptyState = document.getElementById(`empty-state-${tableType}`);
@@ -511,7 +612,10 @@
         
         switch(tableType) {
             case 'livros':
-                tbody.innerHTML = data.map(livro => `
+                tbody.innerHTML = data.map(livro => {
+                    const hasImage = livro.capa_url && livro.capa_url !== 'null' && livro.capa_url !== '';
+                    
+                    return `
                     <tr>
                         <td>${livro.id}</td>
                         <td class="font-mono text-sm">${livro.isbn}</td>
@@ -526,8 +630,8 @@
                         <td>
                             <div class="avatar">
                                 <div class="w-12 h-16 rounded bg-base-200 flex items-center justify-center overflow-hidden">
-                                    ${livro.capa_url ? 
-                                        `<img src="{{ asset('${livro.capa_url}') }}" 
+                                    ${hasImage ? 
+                                        `<img src="${livro.capa_url}" 
                                               alt="Capa de ${livro.nome}" 
                                               class="book-cover"
                                               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -541,7 +645,7 @@
                         </td>
                         <td class="font-semibold">€${livro.preco}</td>
                     </tr>
-                `).join('');
+                `}).join('');
                 break;
                 
             case 'autores':
@@ -598,6 +702,55 @@
                 `}).join('');
             break;
         }
+    }
+
+    // Renderizar versão mobile para livros
+    function renderMobileLivros(data) {
+        const container = document.getElementById('mobile-livros-list');
+        const emptyState = document.getElementById('empty-state-livros');
+        
+        if (data.length === 0) {
+            container.innerHTML = '';
+            if (emptyState) emptyState.classList.remove('hidden');
+            return;
+        }
+        
+        if (emptyState) emptyState.classList.add('hidden');
+        
+        container.innerHTML = data.map(livro => {
+            const hasImage = livro.capa_url && livro.capa_url !== 'null' && livro.capa_url !== '';
+            
+            return `
+            <div class="mobile-book-card">
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-20 rounded bg-base-200 flex items-center justify-center overflow-hidden border">
+                            ${hasImage ? 
+                                `<img src="${livro.capa_url}" 
+                                      alt="Capa de ${livro.nome}" 
+                                      class="mobile-book-cover"
+                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                 <div class="w-full h-full flex items-center justify-center hidden bg-base-300">
+                                     <span class="text-xs">${livro.capa}</span>
+                                 </div>` 
+                                : `<span class="text-xs">${livro.capa}</span>`
+                            }
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-sm truncate">${livro.nome}</h3>
+                        <p class="text-xs text-gray-600 mt-1">${livro.editora}</p>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            ${livro.autores.map(autor => `<span class="badge badge-xs">${autor}</span>`).join('')}
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="font-semibold text-sm">€${livro.preco}</span>
+                            <span class="text-xs text-gray-500">ISBN: ${livro.isbn}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `}).join('');
     }
 
     // Função para mostrar/ocultar tabs
@@ -736,5 +889,43 @@
             element.classList.add('hidden');
         }
     }
+    // Função para mostrar loading durante a exportação
+    function setupExportButton() {
+        const exportButton = document.getElementById('btn-exportar-csv');
+        
+        if (exportButton) {
+            exportButton.addEventListener('click', function(e) {
+                const originalHTML = exportButton.innerHTML;
+                
+                // Mostrar loading
+                exportButton.innerHTML = '<span class="loading loading-spinner loading-sm"></span> A gerar CSV...';
+                exportButton.classList.add('btn-disabled');
+                exportButton.style.opacity = '0.7';
+                exportButton.style.pointerEvents = 'none';
+                
+                // Reset após 8 segundos (caso algo corra mal)
+                setTimeout(() => {
+                    exportButton.innerHTML = originalHTML;
+                    exportButton.classList.remove('btn-disabled');
+                    exportButton.style.opacity = '1';
+                    exportButton.style.pointerEvents = 'auto';
+                }, 8000);
+            });
+        }
+    }
+
+    // Inicializar quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        setupExportButton();
+        
+        // Sua inicialização existente...
+        renderTable('livros', livrosData);
+        renderMobileLivros(livrosData);
+        renderTable('autores', autoresData);
+        renderTable('editoras', editorasData);
+        updateResultCount('livros', livrosData.length);
+        updateResultCount('autores', autoresData.length);
+        updateResultCount('editoras', editorasData.length);
+    });
     </script>
 </x-app-layout>

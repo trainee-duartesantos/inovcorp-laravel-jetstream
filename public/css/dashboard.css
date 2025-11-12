@@ -1,0 +1,207 @@
+.biblioteca {
+    font-size: 3rem;
+    line-height: 1.2;
+    padding-bottom: 1rem;
+}
+.hover-card {
+    background: white;
+    border-radius: 3rem;
+    border: 2px solid #234fa7;
+    box-shadow: 5px 10px 15px -3px rgb(129, 129, 129);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.hover-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+.card {
+    border-radius: 1rem;
+    border: 2px solid #234fa7;
+    box-shadow: 5px 10px 15px -3px rgb(168, 168, 168);
+}
+.card-title {
+    padding: 1rem;
+}
+.btn-limpar {
+    width: 200px;
+    background-color: #1f2937 !important;
+    color: white !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #374151 !important;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.btn-limpar:hover {
+    background-color: #111827 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+/* Estilos para o botão de exportação */
+#btn-exportar-csv {
+    width: 200px;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    border: 2px solid #059669 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 2rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3) !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+#btn-exportar-csv:hover {
+    transform: translateY(2px) !important;
+    box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4) !important;
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+    border-color: #047857 !important;
+    color: white !important;
+}
+
+/* Garantir que o texto fique branco */
+#btn-exportar-csv span {
+    color: white !important;
+}
+
+/* Loading animation para exportação */
+.export-loading {
+    display: none;
+    animation: spin 1s linear infinite;
+}
+
+.export-loading.show {
+    display: inline-block;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Melhorar responsividade do header */
+@media (max-width: 1024px) {
+    .card-title {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.25rem !important;
+        text-align: center;
+    }
+
+    #btn-exportar-csv {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+/* Estilos para as imagens */
+.book-cover {
+    width: 48px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.book-cover:hover {
+    transform: scale(1.1);
+}
+
+.author-photo {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    transition: transform 0.2s ease-in-out;
+}
+
+.author-photo:hover {
+    transform: scale(1.05);
+}
+
+.author-photo-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+.publisher-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    padding: 8px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.publisher-logo:hover {
+    transform: scale(1.05);
+}
+
+.publisher-logo-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    font-weight: bold;
+    color: #374151;
+}
+
+/* Estilos responsivos */
+.mobile-book-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: white;
+}
+
+.mobile-book-cover {
+    width: 60px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .author-photo,
+    .author-photo-container,
+    .publisher-logo,
+    .publisher-logo-container {
+        width: 120px;
+        height: 120px;
+    }
+}
