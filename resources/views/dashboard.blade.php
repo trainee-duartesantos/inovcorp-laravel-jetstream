@@ -109,21 +109,23 @@
                 </div>
 
                 <div class="card bg-white shadow-xl">
-    <div class="card-body">
-        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
-            <h2 class="card-title text-2xl font-bold text-gray-800">📚 Gestão de Livros</h2>
-            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full lg:w-auto">
-                <!-- Botão Exportar CSV -->
-                <a href="{{ route('exportar.livros.csv') }}" 
-                   class="btn bg-green-600 hover:bg-green-700 border-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 w-full sm:w-auto justify-center"
-                   id="btn-exportar-csv">
-                    <span class="text-gray-800">📊 Exportar CSV</span>
-                </a>
-                <div class="lg:hidden text-center sm:text-left w-full sm:w-auto">
-                    <span class="text-sm text-gray-500">↔ Deslize horizontalmente</span>
-                </div>
-            </div>
-        </div>        
+            <div class="card-body">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-6 w-full">
+                    <div class="flex items-center flex-shrink-0">
+                    <h2 class="card-title text-2xl font-bold text-gray-800 whitespace-nowrap">📚 Gestão de Livros</h2>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto justify-end">
+                        <!-- Botão Exportar CSV -->
+                        <a href="{{ route('exportar.livros.csv') }}" 
+                        class="btn bg-green-600 hover:bg-green-700 border-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 justify-center w-full sm:w-auto"
+                        id="btn-exportar-csv">
+                            <span class="text-gray-800">📊 Exportar CSV</span>
+                        </a>
+                        <div class="lg:hidden text-center sm:text-left w-full sm:w-auto">
+                            <span class="text-sm text-gray-500">↔ Deslize horizontalmente</span>
+                        </div>
+                    </div>
+                </div>        
                         <!-- Versão Desktop -->
                         <div class="hidden lg:block overflow-x-auto">
                             <table class="table table-zebra" id="table-livros">
@@ -170,7 +172,7 @@
             <div id="tab-autores" class="card bg-white shadow-xl hidden">
                 <div class="card-body">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="card-title">✍️ Gestão de Autores</h2>
+                        <h2 class="card-title text-2xl font-bold text-gray-800">✍️ Gestão de Autores</h2>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
@@ -182,7 +184,7 @@
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="table table-zebra" id="table-autores">
+                        <table class="table table-zebra" id="table-autores" style="text-align:center">
                             <thead>
                                 <tr>
                                     <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('autores', 0)">Nome <span id="sort-autores-0">↕</span></th>
@@ -201,7 +203,7 @@
             <div id="tab-editoras" class="card bg-white shadow-xl hidden">
                 <div class="card-body">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="card-title">🏢 Gestão de Editoras</h2>
+                        <h2 class="card-title text-2xl font-bold text-gray-800">🏢 Gestão de Editoras</h2>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 mb-6" style="padding: 1rem;">
@@ -213,7 +215,7 @@
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="table table-zebra" id="table-editoras">
+                        <table class="table table-zebra" id="table-editoras" style="text-align:center">
                             <thead>
                                 <tr>
                                     <th class="cursor-pointer hover:bg-base-200" onclick="sortTable('editoras', 0)">Nome <span id="sort-editoras-0">↕</span></th>

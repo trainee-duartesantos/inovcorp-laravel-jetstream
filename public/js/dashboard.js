@@ -272,19 +272,16 @@ function renderTable(tableType, data) {
                             autor.nome
                         }</td>
                         <td class="px-4 py-3">
-                            <div class="flex justify-center">
+                            <div class="flex justify-center items-center">
                                 ${
                                     hasPhoto
                                         ? `<img src="${autor.foto_url}" 
-                                        alt="Foto de ${autor.nome}" 
-                                        class="author-photo"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div class="author-photo-container hidden">
-                                        <span class="text-4xl">👨‍💼</span>
-                                    </div>`
+                                            alt="Foto de ${autor.nome}" 
+                                            class="author-photo"
+                                            onerror="this.src='images/placeholders/placeholder-author.jpg'">`
                                         : `<div class="author-photo-container">
-                                        <span class="text-4xl">👨‍💼</span>
-                                    </div>`
+                                            <span class="text-4xl">👨‍💼</span>
+                                        </div>`
                                 }
                             </div>
                         </td>
@@ -303,35 +300,27 @@ function renderTable(tableType, data) {
                         editora.logo_url !== "";
 
                     return `
-                    <tr class="hover:bg-base-100">
-                        <td class="px-4 py-3 font-semibold text-lg">${
-                            editora.nome
-                        }</td>
-                        <td class="px-4 py-3">
-                            <div class="flex justify-center">
-                                ${
-                                    hasLogo
-                                        ? `<img src="${editora.logo_url}" 
-                                        alt="Logótipo de ${editora.nome}" 
-                                        class="publisher-logo"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    <div class="publisher-logo-container hidden">
-                                        <span class="text-2xl font-bold">${editora.nome.substring(
-                                            0,
-                                            2
-                                        )}</span>
-                                    </div>`
-                                        : `<div class="publisher-logo-container">
-                                        <span class="text-2xl font-bold">${editora.nome.substring(
-                                            0,
-                                            2
-                                        )}</span>
-                                    </div>`
-                                }
-                            </div>
-                        </td>
-                    </tr>
-                `;
+            <tr class="hover:bg-base-100">
+                <td class="px-4 py-3 font-semibold text-lg">${editora.nome}</td>
+                <td class="px-4 py-3">
+                    <div class="flex justify-center items-center">
+                        ${
+                            hasLogo
+                                ? `<img src="${editora.logo_url}" 
+                                    alt="Logótipo de ${editora.nome}" 
+                                    class="publisher-logo"
+                                    onerror="this.src='images/placeholders/placeholder-publisher.svg'">`
+                                : `<div class="publisher-logo-container">
+                                    <span class="text-2xl font-bold">${editora.nome.substring(
+                                        0,
+                                        2
+                                    )}</span>
+                                  </div>`
+                        }
+                    </div>
+                </td>
+            </tr>
+        `;
                 })
                 .join("");
             break;

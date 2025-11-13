@@ -7,22 +7,65 @@
     background: white;
     border-radius: 3rem;
     border: 2px solid #234fa7;
-    box-shadow: 5px 10px 15px -3px rgb(129, 129, 129);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
 
 .hover-card:hover {
     transform: scale(1.05);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 10px 15px -3px rgb(129, 129, 129);
 }
 .card {
     border-radius: 1rem;
     border: 2px solid #234fa7;
     box-shadow: 5px 10px 15px -3px rgb(168, 168, 168);
 }
+/* Impede quebra de linha no título e alinha melhor com o botão */
 .card-title {
-    padding: 1rem;
+    white-space: nowrap !important;
+    margin-bottom: 0 !important;
+    padding: 1rem !important;
+}
+
+/* Garante que o container principal nunca corta o texto */
+@media (min-width: 1024px) {
+    .flex-between-header {
+        flex-wrap: nowrap !important;
+    }
+}
+@media (min-width: 1024px) {
+    #mobile-livros-container {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    #table-livros {
+        display: none !important;
+    }
+}
+/* Linhas divisórias subtis na tabela desktop */
+#table-livros th,
+#table-livros td,
+#table-autores th,
+#table-autores td,
+#table-editoras th,
+#table-editoras td {
+    border-bottom: 1px solid #e5e7eb; /* tom cinzento suave */
+}
+
+#table-livros th,
+#table-autores th,
+#table-editoras th {
+    border-top: 2px solid #e5e7eb; /* destaque no topo */
+}
+
+#table-livros tbody tr:hover,
+#table-autores tbody tr:hover,
+#table-editoras tbody tr:hover {
+    background-color: #f9fafb; /* leve destaque ao passar o rato */
+    transition: background 0.2s ease-in-out;
 }
 .btn-limpar {
     width: 200px;
@@ -47,21 +90,25 @@
     transform: translateY(-2px);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }
-/* Estilos para o botão de exportação */
+/* Botão Exportar CSV */
 #btn-exportar-csv {
     width: 200px;
     background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
     border: 2px solid #059669 !important;
     color: white !important;
     font-weight: 600 !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 2rem !important;
+    margin-top: 1rem;
+    padding: 0.55rem 1.25rem !important; /* Menos altura */
+    border-radius: 1.5rem !important; /* Menos arredondado */
     transition: all 0.3s ease !important;
     box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3) !important;
     text-decoration: none !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: 0.5rem !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    line-height: 1 !important; /* Corrige altura vertical */
+    height: auto !important;
 }
 
 #btn-exportar-csv:hover {
@@ -69,7 +116,6 @@
     box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4) !important;
     background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
     border-color: #047857 !important;
-    color: white !important;
 }
 
 /* Garantir que o texto fique branco */
