@@ -251,3 +251,9 @@
         height: 120px;
     }
 }
+.footer {
+    background-color: #1f2937;
+    color: #e5e7eb;
+    padding: 1rem;
+    text-align: center;
+}

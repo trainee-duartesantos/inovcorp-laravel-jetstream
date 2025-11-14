@@ -231,6 +231,11 @@
             </div>  
         </div>
     </div>
+    <footer class="footer sm:footer-horizontal footer-center">
+        <aside>
+            <p>Copyright © All right reserved by Inovcorp Group</p>
+        </aside>
+    </footer>
 
 @push('scripts')
     <script src="{{ asset('js/dashboard.js') }}"></script>
