@@ -1,0 +1,349 @@
+🚀 ROADMAP COMPLETO — Projeto Biblioteca (Laravel + Jetstream + phpMyAdmin)
+🧱 FASE 1 — Preparação e Configuração do Projeto
+1.1 — Criar Estrutura Base
+
+✔ Criar base de dados
+✔ Configurar .env
+✔ Configurar mail (Mailtrap para dev)
+
+1.2 — Criar tabela de roles (implementação simples)
+
+✔ Adicionar coluna role à tabela users
+✔ Dar role = 'cidadao' por defeito no registo
+✔ Criar seed para criar Admin inicial
+
+1.3 — Criar Middleware de Permissões
+
+isAdmin
+
+isCidadao
+
+Atribuir ao grupo de rotas conforme necessidade.
+
+📚 FASE 2 — Migrations, Models e Relações
+
+Criação das tabelas:
+
+2.1 — Authors
+authors
+- id
+- name
+- bio
+
+2.2 — Publishers
+publishers
+- id
+- name
+
+2.3 — Books
+books
+- id
+- title
+- description
+- author_id
+- publisher_id
+- cover_image
+- isbn
+- total_stock
+
+
+Relações:
+
+Book belongsTo Author
+
+Book belongsTo Publisher
+
+Author hasMany Books
+
+Publisher hasMany Books
+
+2.4 — Requisições
+
+Tabela principal:
+
+book_requisitions
+- id
+- code (string: REQ000001)
+- user_id
+- book_id
+- start_date
+- expected_end_date
+- end_date (nullable)
+- status (enum)
+
+2.5 — Fotos da Requisição
+book_requisition_photos
+- id
+- requisition_id
+- photo_path
+
+
+Relações:
+
+Requisition belongsTo User
+
+Requisition belongsTo Book
+
+Requisition hasMany Photos
+
+⚙️ FASE 3 — Seeders
+
+Criação de dados base:
+
+3.1 — Seeder para Admin
+
+Admin inicial com email e password
+
+3.2 — Seeders para Autores, Editoras e Livros
+
+Inserir alguns livros reais
+
+Inserir capas reais ou fictícias
+
+🧩 FASE 4 — Backend: Regras e Lógica de Negócio
+4.1 — Policies
+
+BookPolicy (Admin pode criar/editar/apagar)
+
+RequisitionPolicy (Cidadão só vê as suas)
+
+4.2 — Services
+
+Criar serviços para:
+
+🔹 RequisitionService
+
+validações
+
+gerar código sequencial
+
+gerar datas
+
+upload das fotos
+
+enviar emails
+
+criar requisição
+
+🔹 BookAvailabilityService
+
+verificar se o livro está disponível
+
+contar requisições ativas por user
+
+4.3 — Regras de Negócio (Implementação)
+
+Cidadão não pode ultrapassar 3 requisições ativas
+
+Livro só pode ser requisitado se não existir outra ativa
+
+Admin pode confirmar entrega → atualiza end_date
+
+Notificações:
+
+email de criação
+
+email de entrega
+
+email reminder
+
+📬 FASE 5 — Emails e Notificações
+
+Criar Mailables:
+
+5.1 — RequisitionCreated
+
+Envia:
+
+Para Admin
+
+Para Cidadão
+Inclui:
+
+nome do utilizador
+
+capa do livro
+
+datas
+
+código da requisição
+
+5.2 — RequisitionDelivered
+5.3 — RequisitionReminder
+5.4 — Agendamento de Tarefas
+
+No app/Console/Kernel.php:
+
+Tarefa diária às 09:00
+→ enviar reminder para requisições que acabam amanhã
+
+🖥️ FASE 6 — Interface Para Admin
+
+Secção Admin Panel com:
+
+6.1 — CRUD Autores
+
+listar
+
+criar
+
+editar
+
+apagar
+
+6.2 — CRUD Editoras
+6.3 — CRUD Livros
+
+upload de capa
+
+validação
+
+seleção de autor/editora
+
+6.4 — Requisições
+
+Admin pode:
+
+ver todas
+
+filtrar por status
+
+confirmar entrega
+
+ver datas reais
+
+👤 FASE 7 — Interface Para Cidadãos
+7.1 — Catálogo Público
+
+Pesquisa
+
+Badge: Disponível / Indisponível
+
+Botão "Requisitar"
+
+7.2 — Criar Requisição
+
+upload fotografia (Livewire)
+
+validação imediata
+
+mostrar contagem: "Tem X de 3 requisições ativas"
+
+7.3 — Minhas Requisições
+
+status visível: ativa, entregue, atrasada
+
+datas
+
+capa do livro
+
+código sequencial
+
+📊 FASE 8 — Estatísticas e Indicadores
+
+No topo do menu Requisições:
+
+# Ativas → status="ativa"
+
+# Últimos 30 dias
+
+# Entregues Hoje
+
+Criar um componente Livewire para estes KPIs.
+
+🎁 FASE 9 — Melhorias e Extras
+
+Logs de ações (opcional)
+
+Paginação amigável
+
+Exportar CSV (Admin)
+
+Badges coloridas dinâmicas por status
+
+Dashboard mais moderno com Tailwind
+
+🎯 FASE 10 — Deploy e Otimização
+
+Ajustar storage para imagens
+
+Migrar BD final
+
+Configurar mail real
+
+Criar backup automático da BD
+
+Deploy para servidor (Laravel Forge ou similar)
+
+
+---------------------------------------------------------------------------------------------------------------------------
+1.1 Migrations
+php artisan make:migration create_roles_table --create=roles
+php artisan make:migration create_role_user_table --create=role_user
+php artisan make:migration create_requisicoes_table --create=requisicoes
+php artisan make:migration add_disponivel_to_livros_table --table=livros
+
+
+O que fazem
+
+create_roles_table → cria tabela roles (nome da role, slug).
+
+create_role_user_table → pivot role_user para associar users⇄roles.
+
+create_requisicoes_table → tabela de requisições (todos os campos do fluxo).
+
+add_disponivel_to_livros_table → adiciona boolean disponivel à tabela de livros (se ainda não houver).
+
+1.2 Models
+php artisan make:model Role
+php artisan make:model Requisicao
+
+
+O que fazem
+
+Criam os modelos Eloquent. Vais adicionar relações (users(), livros(), etc.) nesses ficheiros.
+
+1.3 Controllers (CRUD / lógica)
+php artisan make:controller RequisicaoController --resource
+php artisan make:controller Admin/UserController
+php artisan make:controller LivroController --resource   # se ainda precisares do CRUD server-side
+
+
+O que fazem
+
+RequisicaoController → index/store/show/update/destroy para requisições.
+
+Admin/UserController → para promover utilizadores (criação de admins).
+
+LivroController → (opcional) gerir livros no backend (Admin).
+
+1.4 Requests, Policy, Mail, Notification, Seeder
+php artisan make:request RequisicaoStoreRequest
+php artisan make:policy RequisicaoPolicy --model=Requisicao
+php artisan make:seeder RoleSeeder
+php artisan make:seeder AdminSeeder
+php artisan make:seeder LivroSeeder
+php artisan make:mail RequisicaoCreatedMail
+php artisan make:notification RequisicaoReminderNotification
+
+
+O que fazem
+
+RequisicaoStoreRequest → validação da criação de requisições.
+
+RequisicaoPolicy → controla quem pode ver/criar/confirmar requisições.
+
+RoleSeeder + AdminSeeder + LivroSeeder → popular DB.
+
+RequisicaoCreatedMail → e-mail de confirmação.
+
+RequisicaoReminderNotification → notificação/email para reminder do dia anterior.
+
+1.5 (Opcional) Job / Command para Reminders
+php artisan make:job SendRequisitionReminderJob
+php artisan make:command SendDailyRequisitionReminders
+
+
+Usados no scheduler (app/Console/Kernel.php) para enviar reminders automáticos.
+
+Atualização no GitHub

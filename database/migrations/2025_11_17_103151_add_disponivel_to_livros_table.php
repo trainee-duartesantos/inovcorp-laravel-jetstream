@@ -9,12 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('livros', function (Blueprint $table) {
-            //
+            $table->boolean('disponivel')->default(true);
         });
     }
+
 
     /**
      * Reverse the migrations.
