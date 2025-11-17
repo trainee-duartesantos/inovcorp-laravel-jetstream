@@ -11,7 +11,7 @@ class RequisicaoStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class RequisicaoStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'descricao'     => 'required|string|min:10|max:2000',
+            'categoria_id'  => 'required|integer|exists:categorias,id',
+            'prioridade'    => 'required|string|in:baixa,media,alta',
+            'data_limite'   => 'nullable|date|after:today',
+            'ficheiro'      => 'nullable|file|mimes:png,jpg,pdf,doc,docx,zip|max:4096',
         ];
     }
+
 }

@@ -43,7 +43,9 @@ class User extends Authenticatable
     }
 
 
-    // Um utilizador pode ter muitos tickets
+    /**
+     * Requisições feitas pelo utilizador
+     */
     public function roles() {
         return $this->belongsToMany(Role::class);
     }
@@ -55,5 +57,5 @@ class User extends Authenticatable
     public function requisicoes() {
         return $this->hasMany(Requisicao::class);
     }
-
+    
 }

@@ -2,53 +2,36 @@
 
 namespace App\Notifications;
 
+use App\Models\Requisicao;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RequisicaoReminderNotification extends Notification
+class RequisicaoReminderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
+    public $requisicao;
+
+    public function __construct(Requisicao $requisicao)
     {
-        //
+        $this->requisicao = $requisicao;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
+            ->subject('Reminder: Entrega de Livro Amanhã')
+            ->line("Tem uma requisição que deve ser entregue amanhã.")
+            ->line("Livro: " . $this->requisicao->livro->titulo)
+            ->line("Data prevista: " . $this->requisicao->data_prevista->format('d/m/Y'))
+            ->action('Ver Requisição', url('/requisicoes/'.$this->requisicao->id))
+            ->line('Obrigado por utilizar a Biblioteca!');
     }
 }
