@@ -12,18 +12,23 @@ class BibliotecaRealSeeder extends Seeder
 {
     public function run()
     {
-        // Limpar dados existentes na ordem correta
+        // 🔐 Desativar FKs antes de truncar
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Limpar dados existentes
         DB::table('autor_livro')->truncate();
         Livro::truncate();
-        Autor::truncate(); 
+        Autor::truncate();
         Editora::truncate();
 
-        // 1. Criar editoras primeiro
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // ----- 1️⃣ Editoras -----
         $editoras = [
-            ['nome' => 'Porto Editora', 'logo_url' => null],
-            ['nome' => 'Penguin Random House', 'logo_url' => null],
-            ['nome' => 'Editora Leya', 'logo_url' => null],
-            ['nome' => 'Bertrand Editora', 'logo_url' => null]
+            ['nome' => 'Porto Editora', 'logo_url' => 'images/editoras/porto-editora.jpg'],
+            ['nome' => 'Penguin Random House', 'logo_url' => 'images/editoras/penguin.jpg'],
+            ['nome' => 'Editora Leya', 'logo_url' => 'images/editoras/leya.jpg'],
+            ['nome' => 'Bertrand Editora', 'logo_url' => 'images/editoras/bertrand.jpg'],
         ];
 
         $editoraIds = [];
@@ -32,13 +37,13 @@ class BibliotecaRealSeeder extends Seeder
             $editoraIds[$editoraData['nome']] = $editora->id;
         }
 
-        // 2. Criar autores
+        // ----- 2️⃣ Autores -----
         $autores = [
-            ['nome' => 'J.R.R. Tolkien', 'foto_url' => null],
-            ['nome' => 'George Orwell', 'foto_url' => null],
-            ['nome' => 'Miguel de Cervantes', 'foto_url' => null],
-            ['nome' => 'José Saramago', 'foto_url' => null],
-            ['nome' => 'Umberto Eco', 'foto_url' => null]
+            ['nome' => 'J.R.R. Tolkien', 'foto_url' => 'images/autores/tolkien.jpg'],
+            ['nome' => 'George Orwell', 'foto_url' => 'images/autores/orwell.jpg'],
+            ['nome' => 'Miguel de Cervantes', 'foto_url' => 'images/autores/cervantes.jpg'],
+            ['nome' => 'José Saramago', 'foto_url' => 'images/autores/saramago.jpg'],
+            ['nome' => 'Umberto Eco', 'foto_url' => 'images/autores/eco.jpg'],
         ];
 
         $autorIds = [];
@@ -47,44 +52,40 @@ class BibliotecaRealSeeder extends Seeder
             $autorIds[$autorData['nome']] = $autor->id;
         }
 
-        // 3. Criar livros - USANDO editora_id E capa_url
+        // ----- 3️⃣ Livros -----
         $livrosData = [
             [
                 'isbn' => '978-972-004-621-2',
                 'nome' => 'O Senhor dos Anéis',
                 'editora_id' => $editoraIds['Editora Leya'],
-                'bibliografia' => 'Uma jornada épica pela Terra Média onde a Sociedade do Anel tenta destruir o Um Anel para salvar a Terra Média das trevas.',
-                'preco' => '24.99',
-                'capa' => '📖', // Manter o emoji original
-                'capa_url' => 'images/livros/senhor-dos-aneis.jpg' // Nova imagem real
+                'bibliografia' => 'Uma jornada épica pela Terra Média.',
+                'preco' => 24.99,
+                'capa_url' => 'images/livros/senhor-dos-aneis.jpg'
             ],
             [
-                'isbn' => '978-972-0-07061-0', 
+                'isbn' => '978-972-0-07061-0',
                 'nome' => '1984',
                 'editora_id' => $editoraIds['Porto Editora'],
-                'bibliografia' => 'Um clássico da distopia sobre vigilância total e controle governamental numa sociedade futurista.',
-                'preco' => '16.50',
-                'capa' => '📖',
+                'bibliografia' => 'Distopia clássica sobre vigilância governamental.',
+                'preco' => 16.50,
                 'capa_url' => 'images/livros/1984.jpg'
             ],
             [
                 'isbn' => '978-972-004-732-5',
                 'nome' => 'Dom Quixote de La Mancha',
                 'editora_id' => $editoraIds['Porto Editora'],
-                'bibliografia' => 'As aventuras do famoso cavaleiro andante e seu fiel escudeiro Sancho Pança pela Espanha.',
-                'preco' => '19.99',
-                'capa' => '📖',
-                'capa_url' => 'images/livros/don-quixote.jpg'
+                'bibliografia' => 'Aventura icónica do cavaleiro andante.',
+                'preco' => 19.99,
+                'capa_url' => 'images/livros/dom-quixote.jpg'
             ],
             [
                 'isbn' => '978-972-004-823-0',
                 'nome' => 'O Nome da Rosa',
                 'editora_id' => $editoraIds['Editora Leya'],
-                'bibliografia' => 'Mistério medieval num mosteiro beneditino onde uma série de crimes acontece na biblioteca.',
-                'preco' => '22.75',
-                'capa' => '📖',
+                'bibliografia' => 'Mistério medieval num mosteiro beneditino.',
+                'preco' => 22.75,
                 'capa_url' => 'images/livros/nome-da-rosa.jpg'
-            ]
+            ],
         ];
 
         $livroIds = [];
@@ -93,7 +94,7 @@ class BibliotecaRealSeeder extends Seeder
             $livroIds[$livroData['nome']] = $livro->id;
         }
 
-        // 4. Associar autores aos livros (tabela pivot autor_livro)
+        // ----- 4️⃣ Pivot autor_livro -----
         $associations = [
             'O Senhor dos Anéis' => ['J.R.R. Tolkien'],
             '1984' => ['George Orwell'],
@@ -103,7 +104,7 @@ class BibliotecaRealSeeder extends Seeder
 
         foreach ($associations as $livroNome => $autoresNomes) {
             $livroId = $livroIds[$livroNome];
-            
+
             foreach ($autoresNomes as $autorNome) {
                 $autorId = $autorIds[$autorNome];
                 DB::table('autor_livro')->insert([
@@ -115,9 +116,6 @@ class BibliotecaRealSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ Seeder executado com sucesso!');
-        $this->command->info('📚 Livros criados: ' . Livro::count());
-        $this->command->info('✍️ Autores criados: ' . Autor::count());
-        $this->command->info('🏢 Editoras criadas: ' . Editora::count());
+        $this->command->info("📚 Biblioteca realista populada com sucesso!");
     }
 }
