@@ -11,7 +11,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             AdminSeeder::class,
-            BibliotecaRealSeeder::class,
+            EditorasSeeder::class, 
+            AutoresSeeder::class,
+            LivrosSeeder::class,
+            RequisicaoSeeder::class, 
+            BibliotecaRealSeeder::class, 
         ]);
+
+        echo "✔ Base de dados totalmente populada com sucesso!\n";
     }
 }

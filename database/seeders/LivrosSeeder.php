@@ -10,11 +10,18 @@ class LivrosSeeder extends Seeder
 {
     public function run(): void
     {
+        $editoraLeya = Editora::where('nome', 'like', '%Leya%')->first();
+        $editoraPorto = Editora::where('nome', 'like', '%Porto%')->first();
+
+        if (!$editoraLeya || !$editoraPorto) {
+            dd('❌ Editoras não encontradas! Verifica EditorasSeeder.');
+        }
+
         $livros = [
             [
                 'isbn' => '978-972-004-621-2',
                 'nome' => 'O Senhor dos Anéis',
-                'editora_id' => Editora::where('nome', 'Editora Leya')->first()->id,
+                'editora_id' => $editoraLeya->id,
                 'bibliografia' => 'Uma jornada épica na Terra Média.',
                 'preco' => 24.99,
                 'capa_url' => 'images/livros/senhor-dos-aneis.jpg'
@@ -22,31 +29,17 @@ class LivrosSeeder extends Seeder
             [
                 'isbn' => '978-972-0-07061-0',
                 'nome' => '1984',
-                'editora_id' => Editora::where('nome', 'Porto Editora')->first()->id,
+                'editora_id' => $editoraPorto->id,
                 'bibliografia' => 'Distopia sobre vigilância e controle governamental.',
                 'preco' => 16.50,
                 'capa_url' => 'images/livros/1984.jpg'
             ],
-            [
-                'isbn' => '978-972-004-732-5',
-                'nome' => 'Dom Quixote de La Mancha',
-                'editora_id' => Editora::where('nome', 'Porto Editora')->first()->id,
-                'bibliografia' => 'Aventuras do cavaleiro Dom Quixote.',
-                'preco' => 19.99,
-                'capa_url' => 'images/livros/dom-quixote.jpg'
-            ],
-            [
-                'isbn' => '978-972-004-823-0',
-                'nome' => 'O Nome da Rosa',
-                'editora_id' => Editora::where('nome', 'Editora Leya')->first()->id,
-                'bibliografia' => 'Mistério num mosteiro medieval.',
-                'preco' => 22.75,
-                'capa_url' => 'images/livros/nome-da-rosa.jpg'
-            ]
         ];
 
         foreach ($livros as $livro) {
             Livro::create($livro);
         }
+
+        echo "✔ Livros criados com sucesso!\n";
     }
 }
