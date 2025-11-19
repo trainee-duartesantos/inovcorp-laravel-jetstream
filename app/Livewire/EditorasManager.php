@@ -6,6 +6,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Editora;
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.admin')]
 
 class EditorasManager extends Component
 {
@@ -102,7 +105,7 @@ class EditorasManager extends Component
     {
         $this->resetPage();
     }
-    
+
     public function render()
     {
         $editoras = Editora::query()

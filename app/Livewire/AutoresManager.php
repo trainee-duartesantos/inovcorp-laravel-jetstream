@@ -6,6 +6,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Autor;
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.admin')]
 
 class AutoresManager extends Component
 {
