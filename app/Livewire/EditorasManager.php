@@ -3,32 +3,27 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use App\Models\Editora;
 use Livewire\Attributes\Layout;
+use App\Models\Editora;
 
 #[Layout('layouts.admin')]
-
 class EditorasManager extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads;
 
-    public $search = '';
     public $modalOpen = false;
     public $modalDeleteOpen = false;
 
     public $editora_id;
     public $nome;
-    public $logo;
-    public $logo_atual;
+    public $logotipo;         // novo upload
+    public $logotipo_atual;   // caminho já guardado
 
     protected $rules = [
-        'nome' => 'required|max:255',
-        'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'nome' => 'required|string|max:255',
+        'logotipo' => 'nullable|image|mimes:jpg,jpeg,png,svg|max:4096',
     ];
-
-    protected $paginationTheme = 'tailwind';
 
     public function openModal()
     {
@@ -45,31 +40,29 @@ class EditorasManager extends Component
     {
         $this->editora_id = null;
         $this->nome = '';
-        $this->logo = null;
-        $this->logo_atual = null;
+        $this->logotipo = null;
+        $this->logotipo_atual = null;
     }
 
     public function store()
     {
         $this->validate();
 
-        $logoUrl = $this->logo
-            ? $this->logo->store('images/editoras', 'public')
-            : $this->logo_atual;
+        $logoPath = $this->logotipo
+            ? $this->logotipo->store('images/editoras', 'public')
+            : $this->logotipo_atual;
 
-        Editora::updateOrCreate(
+        $editora = Editora::updateOrCreate(
             ['id' => $this->editora_id],
             [
-                'nome' => $this->nome,      // será encriptado pelo model
-                'logo_url' => $logoUrl,
+                'nome' => $this->nome,
+                'logotipo' => $logoPath,
             ]
         );
 
         session()->flash(
             'message',
-            $this->editora_id
-                ? 'Editora atualizada com sucesso!'
-                : 'Editora criada com sucesso!'
+            $this->editora_id ? 'Editora atualizada com sucesso!' : 'Editora criada com sucesso!'
         );
 
         $this->closeModal();
@@ -80,9 +73,8 @@ class EditorasManager extends Component
         $editora = Editora::findOrFail($id);
 
         $this->editora_id = $editora->id;
-        $this->nome = $editora->nome;       // já vem descifrado
-        $this->logo_atual = $editora->logo_url;
-        $this->logo = null;
+        $this->nome = $editora->nome;
+        $this->logotipo_atual = $editora->logotipo;
 
         $this->modalOpen = true;
     }
@@ -95,27 +87,16 @@ class EditorasManager extends Component
 
     public function delete()
     {
-        Editora::findOrFail($this->editora_id)->delete();
-
+        Editora::find($this->editora_id)?->delete();
         $this->modalDeleteOpen = false;
-        session()->flash('message', 'Editora apagada com sucesso!');
-    }
 
-    public function updatingSearch()
-    {
-        $this->resetPage();
+        session()->flash('message', 'Editora eliminada com sucesso!');
     }
 
     public function render()
     {
-        $editoras = Editora::query()
-            ->when($this->search, fn($q) =>
-                $q->where('nome', 'like', '%' . $this->search . '%')
-            )
-            ->orderBy('nome')
-            ->paginate(10);
+        $editoras = Editora::orderBy('id', 'desc')->get();
 
         return view('livewire.editoras-manager', compact('editoras'));
     }
-
 }

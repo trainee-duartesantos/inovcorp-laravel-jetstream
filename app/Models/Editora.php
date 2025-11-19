@@ -9,7 +9,7 @@ class Editora extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'logo_url'];
+    protected $fillable = ['nome', 'logotipo'];
 
     public function livros()
     {

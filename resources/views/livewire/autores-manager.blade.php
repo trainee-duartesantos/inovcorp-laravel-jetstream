@@ -1,33 +1,20 @@
+<div class="p-6 bg-base-200 min-h-screen">
 
-
-<div class="p-4 lg:p-6 bg-base-200 min-h-screen">
-
-    {{-- Flash message --}}
-    @if(session()->has('message'))
-        <div class="alert alert-success mb-4">
-            {{ session('message') }}
-        </div>
-    @endif
-
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-            ✍️ Gestão de Autores
-        </h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">✍️ Gestão de Autores</h1>
 
         <button wire:click="openModal" class="btn btn-primary">
             ➕ Adicionar Autor
         </button>
     </div>
 
-    {{-- Pesquisa --}}
-    <div class="mb-4 max-w-md">
-        <input wire:model.debounce.300ms="search"
-               type="text"
-               placeholder="Pesquisar por nome..."
-               class="input input-bordered w-full" />
-    </div>
+    {{-- ALERTA DE SUCESSO --}}
+    @if (session('message'))
+        <div class="alert alert-success mb-4">
+            {{ session('message') }}
+        </div>
+    @endif
 
-    {{-- Tabela --}}
     <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
         <table class="table w-full">
             <thead class="bg-base-300 text-base-content">
@@ -37,41 +24,38 @@
                     <th class="w-40">Ações</th>
                 </tr>
             </thead>
+
             <tbody>
                 @forelse($autores as $autor)
                     <tr>
                         <td>
-                            @if($autor->foto_url)
-                                <img src="{{ asset('storage/'.$autor->foto_url) }}"
-                                     class="w-12 h-12 object-cover rounded-full shadow">
-                            @else
-                                <div class="avatar placeholder">
-                                    <div class="bg-neutral text-neutral-content rounded-full w-12">
-                                        <span class="text-xl">
-                                            {{ mb_substr($autor->nome, 0, 1) }}
-                                        </span>
-                                    </div>
-                                </div>
-                            @endif
+                            @php
+                                $foto = $autor->foto
+                                    ? asset('storage/'.$autor->foto)
+                                    : asset('storage/images/placeholders/placeholder-author.jpg');
+                            @endphp
+
+                            <img src="{{ $foto }}"
+                                 alt="Foto de {{ $autor->nome }}"
+                                 class="w-12 h-12 rounded-full object-cover shadow">
                         </td>
-                        <td class="font-semibold">{{ $autor->nome }}</td>
-                        <td>
-                            <div class="flex gap-2">
-                                <button wire:click="edit({{ $autor->id }})"
-                                        class="btn btn-xs btn-info">
-                                    ✏ Editar
-                                </button>
-                                <button wire:click="confirmDelete({{ $autor->id }})"
-                                        class="btn btn-xs btn-error">
-                                    🗑 Apagar
-                                </button>
-                            </div>
+
+                        <td class="font-semibold">
+                            {{ $autor->nome }}
+                        </td>
+
+                        <td class="flex gap-2">
+                            <button wire:click="edit({{ $autor->id }})"
+                                    class="btn btn-xs btn-info">✏ Editar</button>
+
+                            <button wire:click="confirmDelete({{ $autor->id }})"
+                                    class="btn btn-xs btn-error">🗑 Apagar</button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-center py-6 text-sm text-base-content/60">
-                            Nenhum autor encontrado.
+                        <td colspan="3" class="text-center py-4 text-base-content/70">
+                            Nenhum autor registado.
                         </td>
                     </tr>
                 @endforelse
@@ -79,34 +63,37 @@
         </table>
     </div>
 
-    <div class="mt-4">
-        {{ $autores->links() }}
-    </div>
-
-    {{-- Modal Criar/Editar --}}
+    {{-- MODAL CRIAR / EDITAR --}}
     @if($modalOpen)
         <div class="modal modal-open">
             <div class="modal-box max-w-md">
-                <h2 class="text-xl font-semibold mb-4">
+                <h2 class="text-xl font-semibold mb-3">
                     {{ $autor_id ? 'Editar Autor' : 'Novo Autor' }}
                 </h2>
 
-                <form wire:submit.prevent="store" class="space-y-3">
+                <form wire:submit.prevent="store" class="space-y-4">
 
                     <div>
-                        <label class="label"><span class="label-text">Nome</span></label>
-                        <input type="text" wire:model="nome" class="input input-bordered w-full">
+                        <label class="label">
+                            <span class="label-text font-semibold">Nome</span>
+                        </label>
+                        <input type="text"
+                               wire:model="nome"
+                               class="input input-bordered w-full"
+                               placeholder="Nome do autor">
                         @error('nome') <span class="text-error text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
-                        <label class="label"><span class="label-text">Foto (opcional)</span></label>
+                        <label class="label">
+                            <span class="label-text font-semibold">Foto</span>
+                        </label>
                         <div class="flex items-center gap-3">
-                            <input type="file" wire:model="foto"
-                                   class="file-input file-input-bordered file-input-sm">
+                            <input type="file" wire:model="foto" class="file-input file-input-bordered">
+
                             @if($foto_atual)
                                 <img src="{{ asset('storage/'.$foto_atual) }}"
-                                     class="h-10 w-10 rounded-full object-cover shadow">
+                                     class="h-14 w-14 rounded-full object-cover shadow">
                             @endif
                         </div>
                         @error('foto') <span class="text-error text-xs">{{ $message }}</span> @enderror
@@ -124,24 +111,19 @@
         </div>
     @endif
 
-    {{-- Modal Apagar --}}
+    {{-- MODAL APAGAR --}}
     @if($modalDeleteOpen)
         <div class="modal modal-open">
-            <div class="modal-box max-w-md">
+            <div class="modal-box">
                 <h2 class="text-lg font-bold text-red-600">⚠ Confirmar Eliminação</h2>
                 <p>Deseja mesmo eliminar este autor?</p>
 
                 <div class="modal-action">
-                    <button class="btn" wire:click="$set('modalDeleteOpen', false)">
-                        Cancelar
-                    </button>
-                    <button class="btn btn-error" wire:click="delete">
-                        Apagar
-                    </button>
+                    <button class="btn" wire:click="$set('modalDeleteOpen', false)">Cancelar</button>
+                    <button class="btn btn-error" wire:click="delete">Apagar</button>
                 </div>
             </div>
         </div>
     @endif
 
 </div>
-

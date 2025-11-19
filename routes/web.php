@@ -20,11 +20,11 @@ Route::middleware([
     })->name('dashboard');
 
     // Rotas Admin
-    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
-        Route::get('/livros', LivrosManager::class)->name('admin.livros');
-        Route::get('/autores', AutoresManager::class)->name('admin.autores');
-        Route::get('/editoras', EditorasManager::class)->name('admin.editoras');
+        Route::get('/admin/livros', LivrosManager::class)->name('admin.livros');
+        Route::get('/admin/autores', AutoresManager::class)->name('admin.autores');
+        Route::get('/admin/editoras', EditorasManager::class)->name('admin.editoras');
 
     });
 });
