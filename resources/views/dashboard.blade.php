@@ -1,11 +1,8 @@
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-@endpush
 
+@extends('layouts.admin')
 
+@section('content')
 
-<x-app-layout>
-    <x-slot name="header">
         <div class="flex flex-col items-center w-full gap-8">
             <h1 class="text-5xl font-bold text-center text-white biblioteca">
                 {{ __('Biblioteca') }}
@@ -34,7 +31,6 @@
                 </div>
             </div>
         </div>
-    </x-slot>
 
     <div class="py-6 bg-white-100">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -237,8 +233,5 @@
         </aside>
     </footer>
 
-@push('scripts')
-    <script src="{{ asset('js/dashboard.js') }}"></script>
-@endpush
 
-</x-app-layout>
+@endsection

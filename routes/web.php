@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\LivrosManager;
+use App\Livewire\AutoresManager;
+use App\Livewire\EditorasManager;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,12 +20,16 @@ Route::middleware([
     })->name('dashboard');
 
     // Rotas Admin
-    Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-        Route::get('/admin/livros', LivrosManager::class)->name('admin.livros');
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+
+        Route::get('/livros', LivrosManager::class)->name('admin.livros');
+        Route::get('/autores', AutoresManager::class)->name('admin.autores');
+        Route::get('/editoras', EditorasManager::class)->name('admin.editoras');
+
     });
 });
 
-// Export CSV (opção pública ou protegida? Aqui mantenho protegida se quiseres)
+// Export CSV
 Route::middleware(['auth', 'verified', 'admin'])->get('/exportar/livros/csv', function () {
     $livros = \App\Models\Livro::with(['editora', 'autores'])->get();
 
