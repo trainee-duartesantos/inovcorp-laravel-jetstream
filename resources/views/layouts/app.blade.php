@@ -23,6 +23,15 @@
     </head>
     <body class="font-sans antialiased">
         <x-banner />
+            <nav class="bg-gray-800 text-white px-6 py-3 flex gap-6">
+                <a href="{{ route('livros.index') }}" class="hover:underline">
+                    📚 Catálogo
+                </a>
+
+                <a href="{{ route('requisicoes.index') }}" class="hover:underline">
+                    🔁 Minhas Requisições
+                </a>
+            </nav>
 
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')

@@ -6,6 +6,10 @@ use App\Models\Livro;
 use App\Models\Requisicao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\RequisicaoCreatedMail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
+
 
 class RequisicaoController extends Controller
 {
@@ -14,12 +18,25 @@ class RequisicaoController extends Controller
     {
         $user = Auth::user();
 
-        $requisicoes = Requisicao::with(['livro'])
-            ->where('user_id', $user->id)
-            ->orderBy('data_requisicao', 'desc')
+        $ativas = $user->requisicoes()
+            ->where('estado', 'ativa')
+            ->with('livro')
+            ->latest()
             ->get();
 
-        return view('requisicoes.index', compact('requisicoes'));
+        $entregues = $user->requisicoes()
+            ->where('estado', 'entregue')
+            ->with('livro')
+            ->latest()
+            ->get();
+
+        $canceladas = $user->requisicoes()
+            ->whereIn('estado', ['cancelada', 'atrasada'])
+            ->with('livro')
+            ->latest()
+            ->get();
+
+        return view('requisicoes.index', compact('ativas', 'entregues', 'canceladas'));
     }
 
     // Criar nova requisição
@@ -51,7 +68,7 @@ class RequisicaoController extends Controller
         $novoNumero = 'R-' . str_pad(($ultimo->id ?? 0) + 1, 4, '0', STR_PAD_LEFT);
 
         // 4️⃣ Criar requisição
-        Requisicao::create([
+        $requisicao = Requisicao::create([
             'numero'         => $novoNumero,
             'user_id'        => $user->id,
             'livro_id'       => $livro->id,
@@ -59,6 +76,16 @@ class RequisicaoController extends Controller
             'data_prevista'  => now()->addDays(5),
             'estado'         => 'ativa',
         ]);
+
+        // 📩 1️⃣ Email para o cidadão
+        Mail::to($user->email)->queue(new RequisicaoCreatedMail($requisicao));
+
+        // 📩 2️⃣ Email para todos os administradores
+        $admins = User::whereHas('roles', fn($q) => $q->where('slug', 'admin'))->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->queue(new RequisicaoCreatedMail($requisicao));
+        }
+
 
         // 5️⃣ Atualizar disponibilidade
         $livro->disponivel = false;

@@ -15,7 +15,9 @@ class DatabaseSeeder extends Seeder
             AutoresSeeder::class,
             LivrosSeeder::class,
             RequisicaoSeeder::class, 
-            BibliotecaRealSeeder::class, 
+            BibliotecaRealSeeder::class,
+            
+            FakeDataSeeder::class,
         ]);
 
         echo "✔ Base de dados totalmente populada com sucesso!\n";

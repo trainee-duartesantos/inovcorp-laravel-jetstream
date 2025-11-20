@@ -17,25 +17,28 @@ class RequisicaoAdminController extends Controller
         return view('admin.requisicoes.index', compact('requisicoes'));
     }
 
-    // Confirmar entrega (devolução) do livro
-    public function confirmarEntrega(Requisicao $requisicao)
+    public function show($id)
     {
-        if ($requisicao->estado !== 'pending') {
-            return back()->with('error', 'Esta requisição já foi finalizada.');
+        $requisicao = Requisicao::with(['livro', 'user'])->findOrFail($id);
+        return view('admin.requisicoes.show', compact('requisicao'));
+    }
+
+    public function entregar($id)
+    {
+        $requisicao = Requisicao::findOrFail($id);
+
+        if ($requisicao->estado !== 'ativa') {
+            return back()->with('error', 'Esta requisição já não está ativa.');
         }
 
-        $requisicao->update([
-            'estado'        => 'returned',
-            'data_entrega'  => now(),
-        ]);
+        $requisicao->estado = 'entregue';
+        $requisicao->data_entrega = now();
+        $requisicao->save();
 
-        // Voltar a marcar o livro como disponível
-        $livro = $requisicao->livro;
-        if ($livro) {
-            $livro->disponivel = true;
-            $livro->save();
-        }
+        // tornar o livro disponível novamente
+        $requisicao->livro->update(['disponivel' => true]);
 
-        return back()->with('success', 'Entrega confirmada com sucesso!');
+        return redirect()->route('admin.requisicoes.index')
+            ->with('success', 'Entrega confirmada com sucesso!');
     }
 }

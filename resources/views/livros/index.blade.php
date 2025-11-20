@@ -1,25 +1,52 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
-<h1 class="text-3xl font-bold mb-4">📚 Catálogo de Livros</h1>
 
-<div class="grid md:grid-cols-3 gap-6">
-@foreach($livros as $livro)
-    <div class="card bg-base-200 shadow-xl">
-        <figure>
-            <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/150' }}"
-                 class="h-48 w-full object-cover">
-        </figure>
-        <div class="card-body">
-            <h2 class="card-title">{{ $livro->nome }}</h2>
+<div class="max-w-6xl mx-auto mt-6">
+    <h1 class="text-3xl font-bold mb-4">📚 Catálogo de Livros</h1>
 
-            <p><strong>Editora:</strong> {{ $livro->editora->nome }}</p>
-
-            <a href="{{ route('livros.show', $livro->id) }}" class="btn btn-primary mt-2">
-                Detalhes 📖
-            </a>
+    @if(session('success'))
+        <div class="alert alert-success mb-3">
+            {{ session('success') }}
         </div>
-    </div>
-@endforeach
+    @endif
+
+    <table class="table w-full bg-white shadow rounded-lg">
+        <thead class="bg-gray-800 text-white">
+            <tr>
+                <th>Capa</th>
+                <th>Nome</th>
+                <th>Editora</th>
+                <th>Estado</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($livros as $livro)
+            <tr>
+                <td class="p-2">
+                    <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/60' }}"
+                        class="w-12 h-16 object-cover rounded">
+                </td>
+
+                <td>{{ $livro->nome }}</td>
+                <td>{{ $livro->editora->nome }}</td>
+
+                <td>
+                    <span class="badge {{ $livro->disponivel ? 'badge-success' : 'badge-error' }}">
+                        {{ $livro->disponivel ? 'Disponível' : 'Requisitado' }}
+                    </span>
+                </td>
+
+                <td>
+                    <a href="{{ route('livros.show', $livro) }}" class="btn btn-sm btn-primary">
+                        Ver detalhes
+                    </a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
+
 @endsection

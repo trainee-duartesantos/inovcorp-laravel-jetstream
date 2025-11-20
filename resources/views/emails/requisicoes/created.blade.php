@@ -1,18 +1,22 @@
 @component('mail::message')
-# Requisição Criada
+# 📚 Requisição Criada com Sucesso!
 
 Olá {{ $requisicao->user->name }},
 
-A sua requisição do livro **{{ $requisicao->livro->titulo }}** foi registada com sucesso.
+A sua requisição foi registada com os seguintes detalhes:
 
-### Detalhes:
-- Número: {{ $requisicao->numero }}
-- Data da requisição: {{ $requisicao->data_requisicao->format('d/m/Y') }}
-- Data prevista de entrega: {{ $requisicao->data_prevista->format('d/m/Y') }}
+**Número:** {{ $requisicao->numero }}  
+**Livro:** {{ $requisicao->livro->nome }}  
+**Data de Requisição:** {{ $requisicao->data_requisicao->format('d/m/Y') }}  
+**Data Prevista de Entrega:** {{ $requisicao->data_prevista->format('d/m/Y') }}
 
-@component('mail::button', ['url' => url('/requisicoes/'.$requisicao->id)])
-Ver Requisição
+@component('mail::panel')
+@if($requisicao->livro->capa_url)
+<img src="{{ asset('storage/'.$requisicao->livro->capa_url) }}" width="150px">
+@endif
 @endcomponent
+
+Agradecemos a sua utilização do serviço de Biblioteca da Inovcorp!
 
 Obrigado,<br>
 {{ config('app.name') }}

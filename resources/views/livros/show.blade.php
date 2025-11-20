@@ -1,6 +1,18 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
+@if(session('error'))
+    <div class="alert alert-error mb-3">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success mb-3">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="flex gap-6">
     <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/200' }}"
          class="w-48 h-64 object-cover rounded">
@@ -33,4 +45,10 @@
         @endif
     </div>
 </div>
+<div class="mt-6">
+    <a href="{{ route('livros.index') }}" class="btn btn-secondary">
+        ⬅ Voltar
+    </a>
+</div>
+
 @endsection

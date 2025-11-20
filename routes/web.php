@@ -11,6 +11,11 @@ use App\Http\Controllers\LivroController;
 Route::get('/welcome', function () {
     return view('welcome');
 });
+Route::post('/logout', function () {
+    auth()->logout();
+    return redirect('/welcome');
+})->name('logout');
+
 
 // Dashboard protegido
 Route::middleware([
@@ -35,8 +40,10 @@ Route::middleware([
         Route::get('/admin/requisicoes', [RequisicaoAdminController::class, 'index'])
             ->name('admin.requisicoes.index');
 
-        Route::patch('/admin/requisicoes/{requisicao}/entregar',
-            [RequisicaoAdminController::class, 'confirmarEntrega'])
+        Route::get('/admin/requisicoes/{id}', [RequisicaoAdminController::class, 'show'])
+            ->name('admin.requisicoes.show');
+
+        Route::post('/admin/requisicoes/{id}/entregar', [RequisicaoAdminController::class, 'entregar'])
             ->name('admin.requisicoes.entregar');
     });
 
@@ -47,7 +54,7 @@ Route::middleware([
     Route::post('/requisicoes', [RequisicaoController::class, 'store'])
         ->name('requisicoes.store');
 
-}); // 👈 ESTE ESTAVA A FALTAR
+});
 
 // Export CSV
 Route::middleware(['auth', 'verified', 'admin'])

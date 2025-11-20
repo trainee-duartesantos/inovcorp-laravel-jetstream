@@ -13,10 +13,10 @@
 
 <body class="bg-base-200 min-h-screen">
 <div class="flex">
-
+    @if(auth()->check() && auth()->user()->isAdmin())
     {{-- SIDEBAR --}}
     <div id="sidebar" class="bg-base-300 h-screen p-4 transition-all duration-300 w-64 overflow-hidden">
-
+    
         {{-- LOGO --}}
         <div class="flex items-center gap-3 mb-6">
             <img src="{{ asset('storage/images/inovcorp-logo.png') }}" class="h-12 w-auto rounded-lg">
@@ -60,12 +60,13 @@
 
         </ul>
     </div>
-
+    @endif
 
     {{-- MAIN CONTENT --}}
     <div class="flex-1 flex flex-col">
 
         {{-- NAVBAR --}}
+        @if(auth()->check() && auth()->user()->isAdmin())
         <nav class="navbar bg-base-100 shadow-md px-6">
             <button id="toggleSidebar" class="btn btn-ghost">
                 <i class="bi bi-layout-sidebar-inset text-xl"></i> {{-- Bootstrap Icons --}}
@@ -74,7 +75,7 @@
             <div class="flex-1">
                 <h2 class="text-xl font-bold">Painel de Administração</h2>
             </div>
-
+        
             {{-- UTILIZADOR --}}
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost avatar">
@@ -87,13 +88,15 @@
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit">Sair</button>
+                            <button type="submit" class="btn btn-outline">
+                                Sair
+                            </button>
                         </form>
                     </li>
                 </ul>
             </div>
         </nav>
-
+        @endif
         {{-- CONTEÚDO --}}
         <main class="p-6 w-full">
             @if (isset($slot))

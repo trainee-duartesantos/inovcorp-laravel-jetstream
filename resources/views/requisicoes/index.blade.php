@@ -1,63 +1,60 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-6">
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow rounded-lg p-6">
-            <h1 class="text-2xl font-bold mb-4">As minhas Requisições</h1>
 
-            @if(session('success'))
-                <div class="alert alert-success mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
+<div class="max-w-5xl mx-auto mt-6">
 
-            @if(session('error'))
-                <div class="alert alert-error mb-4">
-                    {{ session('error') }}
-                </div>
-            @endif
+    <h1 class="text-3xl font-bold mb-6">🔁 Minhas Requisições</h1>
 
-            <div class="overflow-x-auto">
-                <table class="table w-full">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Livro</th>
-                            <th>Data Requisição</th>
-                            <th>Data Prevista</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($requisicoes as $req)
-                            <tr>
-                                <td>{{ $req->codigo ?? $req->id }}</td>
-                                <td>{{ $req->livro->nome ?? '—' }}</td>
-                                <td>{{ optional($req->data_requisicao)->format('d/m/Y') }}</td>
-                                <td>{{ optional($req->data_prevista)->format('d/m/Y') }}</td>
-                                <td>
-                                    @if($req->estado === 'pending')
-                                        <span class="badge badge-warning">Pendente</span>
-                                    @elseif($req->estado === 'returned')
-                                        <span class="badge badge-success">Devolvido</span>
-                                    @else
-                                        <span class="badge">{{ $req->estado }}</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-6 text-gray-500">
-                                    Ainda não tem requisições.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
+    {{-- Alerts --}}
+    @if(session('success'))
+        <div class="alert alert-success mb-3">
+            {{ session('success') }}
         </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error mb-3">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    {{-- Tabs --}}
+    <div class="tabs mb-4">
+        <a href="#ativas" class="tab tab-bordered tab-active">Ativas</a>
+        <a href="#entregues" class="tab tab-bordered">Entregues</a>
+        <a href="#canceladas" class="tab tab-bordered">Canceladas</a>
     </div>
+
+    {{-- Conteúdo das Tabs --}}
+    <div id="ativas" class="tab-content">
+        @include('requisicoes.partials.tabela', ['lista' => $ativas, 'titulo' => 'Requisições Ativas'])
+    </div>
+
+    <div id="entregues" class="tab-content hidden">
+        @include('requisicoes.partials.tabela', ['lista' => $entregues, 'titulo' => 'Requisições Entregues'])
+    </div>
+
+    <div id="canceladas" class="tab-content hidden">
+        @include('requisicoes.partials.tabela', ['lista' => $canceladas, 'titulo' => 'Requisições Canceladas'])
+    </div>
+
 </div>
+
+{{-- Script para alternar abas --}}
+<script>
+document.querySelectorAll('.tabs a').forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        
+        // Remove active tab class
+        document.querySelectorAll('.tabs a').forEach(el => el.classList.remove('tab-active'));
+        btn.classList.add('tab-active');
+        
+        // Show correct content
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-content')[index].classList.remove('hidden');
+    });
+});
+</script>
+
 @endsection

@@ -39,7 +39,10 @@
                     <tr>
                         <td>{{ $requisicao->codigo ?? $requisicao->id }}</td>
                         <td>{{ $requisicao->user->name ?? '—' }}</td>
-                        <td>{{ $requisicao->livro->nome ?? '—' }}</td>
+                        <td>
+                            <a href="{{ route('admin.requisicoes.show', $requisicao->id) }}" class="text-blue-600 hover:underline">
+                                {{ $requisicao->livro->nome }}
+                            </a></td>
                         <td>{{ optional($requisicao->data_requisicao)->format('d/m/Y') }}</td>
                         <td>{{ optional($requisicao->data_prevista)->format('d/m/Y') }}</td>
                         <td>
