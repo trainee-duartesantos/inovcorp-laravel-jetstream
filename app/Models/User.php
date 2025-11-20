@@ -54,8 +54,10 @@ class User extends Authenticatable
         return $this->roles()->where('slug','admin')->exists();
     }
 
-    public function requisicoes() {
-        return $this->hasMany(Requisicao::class);
+    public function requisicoes()
+    {
+        return $this->hasMany(\App\Models\Requisicao::class);
     }
+
     
 }

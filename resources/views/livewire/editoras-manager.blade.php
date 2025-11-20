@@ -2,131 +2,82 @@
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">🏢 Gestão de Editoras</h1>
-
-        <button wire:click="openModal" class="btn btn-primary">
-            ➕ Adicionar Editora
-        </button>
+        <button wire:click="openModal" class="btn btn-primary">➕ Adicionar Editora</button>
     </div>
-
-    {{-- ALERTA DE SUCESSO --}}
-    @if (session('message'))
-        <div class="alert alert-success mb-4">
-            {{ session('message') }}
-        </div>
-    @endif
 
     <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
         <table class="table w-full">
             <thead class="bg-base-300 text-base-content">
                 <tr>
-                    <th>Logótipo</th>
+                    <th>Logotipo</th>
                     <th>Nome</th>
-                    <th class="w-40">Ações</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
 
             <tbody>
-                @forelse($editoras as $editora)
+                @foreach($editoras as $editora)
                     <tr>
                         <td>
-                            @php
-                                // Se tiver logotipo no campo novo, usa-o.
-                                // Caso contrário, tenta logo_url (do seeder antigo),
-                                // e se não houver, usa placeholder.
-                                $logo =
-                                    $editora->logotipo
-                                        ? asset('storage/'.$editora->logotipo)
-                                        : ($editora->logo_url
-                                            ? asset($editora->logo_url)
-                                            : asset('storage/images/placeholders/placeholder-publisher.svg'));
-                            @endphp
-
-                            <img src="{{ $logo }}"
-                                 alt="Logótipo de {{ $editora->nome }}"
-                                 class="w-16 h-16 object-contain rounded bg-white p-1 shadow">
+                            @if($editora->logotipo)
+                                <img src="{{ asset('storage/'.$editora->logotipo) }}"
+                                    class="w-12 h-12 object-cover rounded shadow">
+                            @else
+                                <img src="{{ asset('storage/images/placeholders/placeholder-publisher.svg') }}"
+                                    class="w-10 h-10">
+                            @endif
                         </td>
 
-                        <td class="font-semibold">
-                            {{ $editora->nome }}
-                        </td>
+                        <td class="font-semibold">{{ $editora->nome }}</td>
 
                         <td class="flex gap-2">
                             <button wire:click="edit({{ $editora->id }})"
-                                    class="btn btn-xs btn-info">✏ Editar</button>
+                                class="btn btn-xs btn-info">✏ Editar</button>
 
                             <button wire:click="confirmDelete({{ $editora->id }})"
-                                    class="btn btn-xs btn-error">🗑 Apagar</button>
+                                class="btn btn-xs btn-error">🗑 Apagar</button>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="3" class="text-center py-4 text-base-content/70">
-                            Nenhuma editora registada.
-                        </td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
 
-    {{-- MODAL CRIAR / EDITAR --}}
+
+    {{-- Modal Criar/Editar --}}
     @if($modalOpen)
         <div class="modal modal-open">
-            <div class="modal-box max-w-md">
-                <h2 class="text-xl font-semibold mb-3">
+            <div class="modal-box max-w-md space-y-3">
+                <h2 class="text-xl font-semibold">
                     {{ $editora_id ? 'Editar Editora' : 'Nova Editora' }}
                 </h2>
 
-                <form wire:submit.prevent="store" class="space-y-4">
+                <input type="text" wire:model="nome" class="input input-bordered w-full"
+                       placeholder="Nome da Editora">
 
-                    <div>
-                        <label class="label">
-                            <span class="label-text font-semibold">Nome</span>
-                        </label>
-                        <input type="text"
-                               wire:model="nome"
-                               class="input input-bordered w-full"
-                               placeholder="Nome da editora">
-                        @error('nome') <span class="text-error text-xs">{{ $message }}</span> @enderror
-                    </div>
+                <input type="file" wire:model="logotipo" class="file-input file-input-bordered w-full">
 
-                    <div>
-                        <label class="label">
-                            <span class="label-text font-semibold">Logótipo</span>
-                        </label>
-                        <div class="flex items-center gap-3">
-                            <input type="file" wire:model="logotipo" class="file-input file-input-bordered">
+                @if($logotipo_atual)
+                    <img src="{{ asset('storage/'.$logotipo_atual) }}" class="h-16 rounded shadow mt-2">
+                @endif
 
-                            @if($logotipo_atual)
-                                <img src="{{ asset('storage/'.$logotipo_atual) }}"
-                                     class="h-14 w-14 rounded object-contain bg-white p-1 shadow">
-                            @endif
-                        </div>
-                        @error('logotipo') <span class="text-error text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="modal-action">
-                        <button type="button" class="btn" wire:click="closeModal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">
-                            {{ $editora_id ? 'Guardar alterações' : 'Criar Editora' }}
-                        </button>
-                    </div>
-
-                </form>
+                <div class="modal-action">
+                    <button wire:click="closeModal" class="btn">Cancelar</button>
+                    <button wire:click="store" class="btn btn-success">Guardar</button>
+                </div>
             </div>
         </div>
     @endif
 
-    {{-- MODAL APAGAR --}}
+
+    {{-- Modal Apagar --}}
     @if($modalDeleteOpen)
         <div class="modal modal-open">
             <div class="modal-box">
-                <h2 class="text-lg font-bold text-red-600">⚠ Confirmar Eliminação</h2>
-                <p>Deseja mesmo eliminar esta editora?</p>
-
+                <p>Tem certeza que deseja eliminar?</p>
                 <div class="modal-action">
-                    <button class="btn" wire:click="$set('modalDeleteOpen', false)">Cancelar</button>
-                    <button class="btn btn-error" wire:click="delete">Apagar</button>
+                    <button wire:click="$set('modalDeleteOpen', false)" class="btn">Cancelar</button>
+                    <button wire:click="delete" class="btn btn-error">Eliminar</button>
                 </div>
             </div>
         </div>

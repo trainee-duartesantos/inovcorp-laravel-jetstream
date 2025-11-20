@@ -51,7 +51,12 @@
                 </a>
             </li>
 
-            <li><a>🔁 Requisições (em breve)</a></li>
+            <li>
+                <a href="{{ route('admin.requisicoes.index') }}"
+                class="{{ request()->routeIs('admin.requisicoes.index') ? 'active bg-base-100 font-semibold' : '' }}">
+                    🔁 Requisições
+                </a>
+            </li>
 
         </ul>
     </div>
@@ -90,9 +95,16 @@
         </nav>
 
         {{-- CONTEÚDO --}}
-        <main class="p-6">
-            {{ $slot }}
+        <main class="p-6 w-full">
+            @if (isset($slot))
+                {{-- Usado pelos componentes Livewire com #[Layout('layouts.admin')] --}}
+                {{ $slot }}
+            @else
+                {{-- Usado pelas views normais com @extends/@section --}}
+                @yield('content')
+            @endif
         </main>
+
 
 
 

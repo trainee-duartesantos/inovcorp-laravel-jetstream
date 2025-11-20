@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout; // 👈 ADICIONA ISTO
+use Livewire\Attributes\Layout;
 use App\Models\Livro;
 use App\Models\Editora;
 use App\Models\Autor;
@@ -132,17 +132,21 @@ class LivrosManager extends Component
     public function render()
     {
         $livros = Livro::query()
-            ->when($this->search, function ($query) {
-                $query->where('nome', 'like', '%' . $this->search . '%')
-                    ->orWhere('isbn', 'like', '%' . $this->search . '%');
-            })
+            ->when($this->search, fn($query) =>
+                $query->where('nome', 'like', '%'.$this->search.'%')
+                    ->orWhere('isbn', 'like', '%'.$this->search.'%')
+            )
             ->orderBy('nome')
             ->paginate(10);
 
         $editoras = Editora::orderBy('nome')->get();
         $autores = Autor::orderBy('nome')->get();
 
-        return view('livewire.livros-manager', compact('livros', 'editoras', 'autores'));
+        return view('livewire.livros-manager', [
+            'livros' => $livros,
+            'editoras' => $editoras,
+            'autores' => $autores,
+        ]);
     }
 
 

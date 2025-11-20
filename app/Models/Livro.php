@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Crypt;
 class Livro extends Model
 {
     protected $fillable = [
-        'isbn', 'nome', 'editora_id', 'bibliografia', 'preco', 'capa'
+        'isbn',
+        'nome',
+        'editora_id',
+        'bibliografia',
+        'preco',
+        'capa_url',
+        'disponivel',
     ];
 
     // 🔐 CIFRAR ao guardar na base de dados
@@ -53,4 +59,16 @@ class Livro extends Model
     {
         return $this->belongsTo(Editora::class);
     }
+    public function requisicoes()
+    {
+        return $this->hasMany(\App\Models\Requisicao::class);
+    }
+
+    public function getDisponivelAttribute()
+    {
+        return !Requisicao::where('livro_id', $this->id)
+        ->where('estado', 'ativa')
+        ->exists();
+    }
+
 }
