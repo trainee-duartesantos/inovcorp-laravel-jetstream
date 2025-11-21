@@ -20,7 +20,8 @@ class RequisicaoCreatedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Requisição criada com sucesso')
-            ->markdown('emails.requisicoes.created');
+        return $this->subject("📚 Requisição #{$this->requisicao->numero}")
+            ->markdown('emails.requisicoes.created')
+            ->with(['requisicao' => $this->requisicao]);
     }
 }

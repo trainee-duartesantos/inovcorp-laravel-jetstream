@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 class Requisicao extends Model
 {
@@ -15,12 +16,13 @@ class Requisicao extends Model
         'numero',
         'user_id',
         'livro_id',
+        'foto_cidadao',
         'data_requisicao',
         'data_prevista',
         'data_entrega',
         'estado',
     ];
-    
+
     protected $casts = [
         'data_requisicao' => 'datetime',
         'data_prevista'   => 'datetime',
@@ -57,4 +59,38 @@ class Requisicao extends Model
     {
         return $query->where('estado', 'pending');
     }
+    
+    public function getDiasDecorridosAttribute()
+    {
+        if (!$this->data_requisicao) {
+            return null;
+        }
+
+        $fim = $this->data_entrega ?? now();
+
+        return $this->data_requisicao->diffInDays($fim);
+    }
+
+    public function getEstadoFormatadoAttribute()
+    {
+        return match ($this->estado) {
+            'ativa'     => 'Ativa',
+            'entregue'  => 'Entregue',
+            'atrasada'  => 'Atrasada',
+            'cancelada' => 'Cancelada',
+            default     => ucfirst($this->estado ?? 'Desconhecido'),
+        };
+    }
+
+    public function getEstadoBadgeAttribute()
+    {
+        return match ($this->estado) {
+            'ativa'     => 'badge-info',
+            'entregue'  => 'badge-success',
+            'atrasada'  => 'badge-error',
+            'cancelada' => 'badge-ghost',
+            default     => 'badge-neutral',
+        };
+    }
+
 }

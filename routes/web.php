@@ -43,7 +43,8 @@ Route::middleware([
         Route::get('/admin/requisicoes/{id}', [RequisicaoAdminController::class, 'show'])
             ->name('admin.requisicoes.show');
 
-        Route::post('/admin/requisicoes/{id}/entregar', [RequisicaoAdminController::class, 'entregar'])
+        Route::post('/admin/requisicoes/{requisicao}/entregar',
+            [RequisicaoAdminController::class, 'confirmarEntrega'])
             ->name('admin.requisicoes.entregar');
     });
 
