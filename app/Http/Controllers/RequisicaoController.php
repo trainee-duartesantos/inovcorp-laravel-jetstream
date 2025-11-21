@@ -78,13 +78,10 @@ class RequisicaoController extends Controller
         ]);
 
         // 📩 1️⃣ Email para o cidadão
-        Mail::to($user->email)->queue(new RequisicaoCreatedMail($requisicao));
+        Mail::to($user->email)->send(new RequisicaoCreatedMail($requisicao));
 
-        // 📩 2️⃣ Email para todos os administradores
-        $admins = User::whereHas('roles', fn($q) => $q->where('slug', 'admin'))->get();
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->queue(new RequisicaoCreatedMail($requisicao));
-        }
+        // Temporariamente sem envio para admin, para evitar erro Mailtrap
+        \Log::info("Envio a admin desativado para evitar limite Mailtrap.");
 
 
         // 5️⃣ Atualizar disponibilidade

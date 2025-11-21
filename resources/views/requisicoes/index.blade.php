@@ -7,17 +7,7 @@
     <h1 class="text-3xl font-bold mb-6">🔁 Minhas Requisições</h1>
 
     {{-- Alerts --}}
-    @if(session('success'))
-        <div class="alert alert-success mb-3">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-error mb-3">
-            {{ session('error') }}
-        </div>
-    @endif
+    @include('components.alertas')
 
     {{-- Tabs --}}
     <div class="tabs mb-4">

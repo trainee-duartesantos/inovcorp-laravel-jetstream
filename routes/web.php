@@ -25,7 +25,7 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return redirect()->route('livros.index');
     })->name('dashboard');
 
     Route::get('/livros', [LivroController::class, 'index'])->name('livros.index');

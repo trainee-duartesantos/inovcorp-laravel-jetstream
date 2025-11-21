@@ -23,15 +23,27 @@
     </head>
     <body class="font-sans antialiased">
         <x-banner />
-            <nav class="bg-gray-800 text-white px-6 py-3 flex gap-6">
-                <a href="{{ route('livros.index') }}" class="hover:underline">
-                    📚 Catálogo
-                </a>
+            <nav class="bg-gray-900 text-gray-100 px-6 py-3 flex justify-between items-center shadow-lg">
+                <div class="flex gap-6 items-center">
+                    <a href="{{ route('livros.index') }}" class="hover:text-yellow-300 font-semibold">
+                        📚 Catálogo
+                    </a>
 
-                <a href="{{ route('requisicoes.index') }}" class="hover:underline">
-                    🔁 Minhas Requisições
-                </a>
+                    <a href="{{ route('requisicoes.index') }}" class="hover:text-yellow-300 font-semibold">
+                        🔁 Minhas Requisições
+                    </a>
+                </div>
+
+                <div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="btn btn-sm btn-outline border-yellow-300 hover:bg-yellow-300 hover:text-black">
+                            🚪 Sair
+                        </button>
+                    </form>
+                </div>
             </nav>
+
 
         <div class="min-h-screen bg-gray-100">
             @livewire('navigation-menu')
@@ -46,9 +58,10 @@
         @endif
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="p-6">
+                @yield('content')
             </main>
+
         </div>
 
         @stack('modals')

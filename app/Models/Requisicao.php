@@ -20,6 +20,12 @@ class Requisicao extends Model
         'data_entrega',
         'estado',
     ];
+    
+    protected $casts = [
+        'data_requisicao' => 'datetime',
+        'data_prevista'   => 'datetime',
+        'data_entrega'    => 'datetime',
+    ];
 
     protected $dates = [
         'data_requisicao',

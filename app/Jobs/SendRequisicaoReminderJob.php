@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Requisicao;
-use App\Notifications\RequisicaoReminderNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\RequisicaoReminderMail;
 
 class SendRequisicaoReminderJob implements ShouldQueue
 {
@@ -16,14 +18,18 @@ class SendRequisicaoReminderJob implements ShouldQueue
 
     public function handle()
     {
-        $amanha = now()->addDay()->toDateString();
+        $amanha = now()->addDay()->startOfDay();
 
-        $requisicoes = Requisicao::whereNull('data_entrega')
+        $requisicoes = Requisicao::where('estado', 'ativa')
             ->whereDate('data_prevista', $amanha)
+            ->with(['user', 'livro'])
             ->get();
 
         foreach ($requisicoes as $req) {
-            $req->user->notify(new RequisicaoReminderNotification($req));
+            Mail::to($req->user->email)
+                ->send(new RequisicaoReminderMail($req));
         }
+
+        Log::info("Lembretes enviados: {$requisicoes->count()} requisições");
     }
 }

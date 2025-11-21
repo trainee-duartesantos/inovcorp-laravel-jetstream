@@ -5,11 +5,7 @@
 <div class="max-w-6xl mx-auto mt-6">
     <h1 class="text-3xl font-bold mb-4">📚 Catálogo de Livros</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success mb-3">
-            {{ session('success') }}
-        </div>
-    @endif
+    @include('components.alertas')
 
     <table class="table w-full bg-white shadow rounded-lg">
         <thead class="bg-gray-800 text-white">

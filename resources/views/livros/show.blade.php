@@ -50,5 +50,41 @@
         ⬅ Voltar
     </a>
 </div>
+@if($historico->count())
+    <h3 class="text-xl font-bold mt-8 mb-3">📜 Histórico de Requisições</h3>
+
+    <table class="table w-full bg-base-100 shadow rounded">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Cidadão</th>
+                <th>Requisição</th>
+                <th>Entrega</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($historico as $req)
+            <tr>
+                <td>{{ $req->numero }}</td>
+                <td>{{ $req->user->name }}</td>
+                <td>{{ $req->data_requisicao->format('d/m/Y') }}</td>
+                <td>{{ $req->data_entrega ? $req->data_entrega->format('d/m/Y') : '—' }}</td>
+                <td>
+                    <span class="badge
+                        @if($req->estado === 'ativa') badge-warning
+                        @elseif($req->estado === 'entregue') badge-success
+                        @else badge-error @endif
+                    ">
+                        {{ ucfirst($req->estado) }}
+                    </span>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
+
+
 
 @endsection

@@ -1,5 +1,5 @@
 
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('content')
 
@@ -7,7 +7,7 @@
             <h1 class="text-5xl font-bold text-center text-white biblioteca">
                 {{ __('Biblioteca') }}
             </h1>
-            
+            @include('components.alertas')
             <div class="flex flex-wrap justify-center gap-6" id="mainTabs">
                 <div class="hover-card w-48" onclick="showTab('livros')">
                     <div class="card-body text-center p-6">
