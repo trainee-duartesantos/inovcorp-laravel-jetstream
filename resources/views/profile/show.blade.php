@@ -1,4 +1,8 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profile') }}
@@ -42,4 +46,10 @@
             @endif
         </div>
     </div>
-</x-app-layout>
+    @livewire('profile.update-profile-information-form')
+    @livewire('profile.update-password-form')
+    @livewire('profile.two-factor-authentication-form')
+    @livewire('profile.logout-other-browser-sessions-form')
+</div>
+@endsection
+

@@ -24,10 +24,15 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return redirect()->route('livros.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+    ->name('dashboard');
 
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::get('/user/profile', function () {
+        return view('profile.show');
+    })->name('profile.show');
+    
     Route::get('/livros', [LivroController::class, 'index'])->name('livros.index');
     Route::get('/livros/{livro}', [LivroController::class, 'show'])->name('livros.show');
     // Rotas Admin
@@ -55,7 +60,6 @@ Route::middleware([
     Route::post('/requisicoes', [RequisicaoController::class, 'store'])
         ->name('requisicoes.store');
 
-});
 
 // Export CSV
 Route::middleware(['auth', 'verified', 'admin'])
