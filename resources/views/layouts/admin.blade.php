@@ -19,14 +19,13 @@
     
         {{-- LOGO --}}
         <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('storage/app/public/images/inovcorp-logo.png') }}" class="h-12 w-auto rounded-lg">
+            <img src="{{ asset('storage/images/inovcorp-logo.png') }}" class="h-12 w-auto rounded-lg">
             <span class="font-bold text-lg" id="sidebar-label">Inovcorp</span>
         </div>
 
         {{-- MENU --}}
         <ul class="menu space-y-2 text-base-content">
             <li class="text-lg font-bold mb-4 flex items-center gap-2">
-                <img src="{{ asset('storage/app/public/images/inovcorp-logo.png') }}" alt="Inovcorp" class="w-8 h-8 object-contain rounded">
                 <span>Biblioteca</span>
             </li>
 
@@ -58,6 +57,16 @@
                 </a>
             </li>
 
+            <li><a href="{{ route('dashboard') }}">📌 Dashboard</a></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-outline">
+                               🚪 Sair
+                            </button>
+                        </form>
+                    </li>
+
         </ul>
     </div>
     @endif
@@ -76,25 +85,7 @@
                 <h2 class="text-xl font-bold">Painel de Administração</h2>
             </div>
         
-            {{-- UTILIZADOR --}}
-            <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost avatar">
-                    <div class="w-10 rounded-full">
-                        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" />
-                    </div>
-                </label>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-outline">
-                                Sair
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+            
         </nav>
         @endif
         {{-- CONTEÚDO --}}
@@ -118,24 +109,27 @@
 
 
 {{-- SLIM SIDEBAR SCRIPT --}}
+
 <script>
-    document.getElementById('toggleSidebar').addEventListener('click', function () {
-        let sidebar = document.getElementById('sidebar');
-        let label = document.getElementById('sidebar-label');
+document.addEventListener("DOMContentLoaded", () => {
+    const avatar = document.querySelector(".dropdown .avatar");
+    const menu = document.querySelector(".dropdown .dropdown-content");
 
-        sidebar.classList.toggle('w-64');
-        sidebar.classList.toggle('w-20');
+    if (avatar && menu) {
+        menu.style.display = "none"; // fechado inicialmente
 
-        label.classList.toggle('hidden');
-
-        // Esconde texto das entradas do menu
-        document.querySelectorAll('#sidebar ul li a').forEach(item => {
-            item.classList.toggle('text-xs');
-            item.classList.toggle('truncate');
+        avatar.addEventListener("click", (e) => {
+            e.stopPropagation();
+            menu.style.display = menu.style.display === "none" ? "block" : "none";
         });
-    });
 
+        document.addEventListener("click", () => {
+            menu.style.display = "none"; // fecha ao clicar fora
+        });
+    }
+});
 </script>
+
 
 @livewireScripts
 @stack('scripts')
