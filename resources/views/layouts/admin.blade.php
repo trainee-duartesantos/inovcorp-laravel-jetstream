@@ -56,6 +56,14 @@
                     🔁 Requisições
                 </a>
             </li>
+            
+            <li>
+                <a href="{{ route('admin.googlebooks.search') }}"
+                class="{{ request()->routeIs('admin.googlebooks.search') ? 'active bg-base-100 font-semibold' : '' }}">
+                    🌍 Importar Livros API
+                </a>
+            </li>
+
 
             <li><a href="{{ route('dashboard') }}">📌 Dashboard</a></li>
                     <li>

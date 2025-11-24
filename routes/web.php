@@ -7,6 +7,8 @@ use App\Livewire\EditorasManager;
 use App\Http\Controllers\RequisicaoController;
 use App\Http\Controllers\Admin\RequisicaoAdminController;
 use App\Http\Controllers\LivroController;
+use App\Http\Controllers\Admin\GoogleBooksController;
+
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -32,7 +34,7 @@ Route::middleware([
     Route::get('/user/profile', function () {
         return view('profile.show');
     })->name('profile.show');
-    
+
     Route::get('/livros', [LivroController::class, 'index'])->name('livros.index');
     Route::get('/livros/{livro}', [LivroController::class, 'show'])->name('livros.show');
     // Rotas Admin
@@ -51,6 +53,17 @@ Route::middleware([
         Route::post('/admin/requisicoes/{requisicao}/entregar',
             [RequisicaoAdminController::class, 'confirmarEntrega'])
             ->name('admin.requisicoes.entregar');
+
+        Route::get('/admin/google-books', [GoogleBooksController::class, 'search'])
+            ->name('admin.googlebooks.search');
+
+        Route::post('/admin/google-books/import', [GoogleBooksController::class, 'import'])
+            ->name('admin.googlebooks.import');
+
+
+        // ✅ NOVA ROTA: teste simples à Google Books API
+        Route::get('/admin/google-books/test', [GoogleBooksController::class, 'test'])
+            ->name('admin.googlebooks.test');
     });
 
     // Rotas Cidadão/Admin (próprio utilizador)
