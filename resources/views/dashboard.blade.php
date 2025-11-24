@@ -15,7 +15,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             {{-- TÍTULO E CARDS DE MENU --}}
-            <div class="flex flex-col items-center w-full gap-8 mb-8">
+            <div class="flex flex-col items-center w-full gap-8 mb-8 bg-gray-800 py-10 rounded-xl shadow-lg">
                 <h1 class="text-5xl font-bold text-center text-white biblioteca">
                     {{ __('Biblioteca') }}
                 </h1>
@@ -42,15 +42,20 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
+            
 
             {{-- 🔹 Menus Públicos dentro do Dashboard --}}
             <div class="flex items-center justify-center gap-6 my-6">
-                <a href="{{ route('livros.index') }}" class="btn btn-outline btn-primary">
+                <a href="{{ route('livros.index') }}" class="btn btn-outline btn-secondary">
                     📚 Catálogo
                 </a>
                 <a href="{{ route('requisicoes.index') }}" class="btn btn-outline btn-secondary">
                     🔁 Minhas Requisições
+                </a>
+                <a href="{{ route('admin.requisicoes.index') }}" class="btn btn-outline btn-secondary">
+                    🔁 Gestão de Requisições
                 </a>
             </div>
             {{-- ========== TAB LIVROS ========== --}}
@@ -279,6 +284,23 @@
             editoras: @json($editoras),
             storageBaseUrl: "{{ asset('storage') }}"
         };
-    </script>
+
+        function showTab(tab) {
+            ['livros', 'autores', 'editoras', 'requisicoes'].forEach(id => {
+                const el = document.getElementById('tab-' + id);
+                if (el) el.classList.add('hidden');
+            });
+
+            const activeTab = document.getElementById('tab-' + tab);
+            if (activeTab) activeTab.classList.remove('hidden');
+        }
+
+        // Abrir tab Livros por defeito
+        document.addEventListener("DOMContentLoaded", () => {
+            @if(auth()->user()->isAdmin())
+                showTab('livros');
+            @endif
+        });
+        </script>
 
 @endsection

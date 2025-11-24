@@ -35,7 +35,7 @@
                 </td>
 
                 <td>
-                    <a href="{{ route('livros.show', $livro) }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('livros.show', $livro) }}" class="btn btn-sm btn-secondary">
                         Ver detalhes
                     </a>
                 </td>

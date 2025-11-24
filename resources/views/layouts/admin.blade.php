@@ -19,14 +19,14 @@
     
         {{-- LOGO --}}
         <div class="flex items-center gap-3 mb-6">
-            <img src="{{ asset('storage/images/inovcorp-logo.png') }}" class="h-12 w-auto rounded-lg">
+            <img src="{{ asset('storage/app/public/images/inovcorp-logo.png') }}" class="h-12 w-auto rounded-lg">
             <span class="font-bold text-lg" id="sidebar-label">Inovcorp</span>
         </div>
 
         {{-- MENU --}}
         <ul class="menu space-y-2 text-base-content">
             <li class="text-lg font-bold mb-4 flex items-center gap-2">
-                <img src="{{ asset('storage/images/inovcorp-logo.png') }}" alt="Inovcorp" class="w-8 h-8 object-contain rounded">
+                <img src="{{ asset('storage/app/public/images/inovcorp-logo.png') }}" alt="Inovcorp" class="w-8 h-8 object-contain rounded">
                 <span>Biblioteca</span>
             </li>
 
