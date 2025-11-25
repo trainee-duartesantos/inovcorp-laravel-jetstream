@@ -131,22 +131,17 @@ class LivrosManager extends Component
 
     public function render()
     {
-        $livros = Livro::query()
-            ->when($this->search, fn($query) =>
-                $query->where('nome', 'like', '%'.$this->search.'%')
-                    ->orWhere('isbn', 'like', '%'.$this->search.'%')
-            )
-            ->orderBy('nome')
+        $livros = \App\Models\Livro::with(['editora', 'autores'])
+            ->where(function ($query) {
+                $query->where('nome', 'LIKE', '%' . $this->search . '%')
+                    ->orWhereEncrypted('isbn', 'LIKE', '%' . $this->search . '%')
+                    ->orWhereHas('autores', function ($q) {
+                        $q->where('nome', 'LIKE', '%' . $this->search . '%');
+                    });
+            })
             ->paginate(10);
 
-        $editoras = Editora::orderBy('nome')->get();
-        $autores = Autor::orderBy('nome')->get();
-
-        return view('livewire.livros-manager', [
-            'livros' => $livros,
-            'editoras' => $editoras,
-            'autores' => $autores,
-        ]);
+        return view('livewire.livros-manager', compact('livros'));
     }
 
 

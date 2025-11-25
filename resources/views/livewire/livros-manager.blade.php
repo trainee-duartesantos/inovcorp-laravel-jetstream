@@ -8,8 +8,11 @@
     </div>
 
     {{-- Pesquisa --}}
-    <input wire:model.debounce.300ms="search" type="text" placeholder="Pesquisar por nome ou ISBN..."
-           class="input input-bordered w-full mb-4" />
+    <input type="text"
+       wire:model.debounce.500ms="search"
+       placeholder="Pesquisar por nome, ISBN, autor..."
+       class="input input-bordered w-full">
+    
 
     {{-- Tabela --}}
     <div class="overflow-x-auto bg-base-100 shadow rounded-lg">

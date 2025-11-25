@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class Livro extends Model
 {
@@ -69,6 +70,10 @@ class Livro extends Model
         return !Requisicao::where('livro_id', $this->id)
         ->where('estado', 'ativa')
         ->exists();
+    }
+    public function scopeOrWhereEncrypted($query, $column, $operator, $value)
+    {
+        return $query->orWhere(DB::raw("CAST(AES_DECRYPT($column, '" . config('app.key') . "') AS CHAR)"), $operator, $value);
     }
 
 }
