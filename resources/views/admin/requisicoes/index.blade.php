@@ -83,7 +83,7 @@
                     <th>Livro</th>
                     <th>Data Requisição</th>
                     <th>Data Prevista</th>
-                    <th>Dias decorridos</th>  {{-- 👈 1C: última coluna antes da ação --}}
+                    <th>Dias decorridos</th>  
                     <th>Estado</th>
                     <th>Ação</th>
                 </tr>

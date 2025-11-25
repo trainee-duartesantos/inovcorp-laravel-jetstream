@@ -1,22 +1,11 @@
-@extends('layouts.app')
+<div class="max-w-6xl mx-auto mt-6">
 
-@section('content')
+    <h1 class="text-3xl font-bold mb-4">📚 Catálogo de Livros</h1>
 
-    <div class="max-w-6xl mx-auto mt-6">
-        <div class="max-w-6xl mx-auto mt-6">
-        <h1 class="text-3xl font-bold mb-6 flex justify-between items-center">
-            📚 Catálogo de Livros
-        </h1>
-
-        @include('components.alertas')
-
-       <form method="GET" action="{{ route('livros.index') }}" class="w-full mb-4">
-            <input type="text" name="q" value="{{ request('q') }}" 
-                placeholder="Pesquisar por título, ISBN ou autor..."
-                class="input input-bordered w-full">
-        </form>
-
-    </div>
+    {{-- Campo de pesquisa listo! --}}
+    <input type="text" wire:model.live.debounce.300ms="query"
+           placeholder="Pesquisar livros por nome, ISBN ou autor..."
+           class="input input-bordered w-full mb-6">
 
     <table class="table w-full bg-white shadow rounded-lg">
         <thead class="bg-gray-800 text-white">
@@ -29,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($livros as $livro)
+        @forelse($livros as $livro)
             <tr>
                 <td class="p-2">
                     <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/60' }}"
@@ -51,9 +40,14 @@
                     </a>
                 </td>
             </tr>
-            @endforeach
+        @empty
+            <tr>
+                <td colspan="5" class="text-center py-4 text-gray-500">
+                    Nenhum livro encontrado 👀
+                </td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
-</div>
 
-@endsection
+</div>
