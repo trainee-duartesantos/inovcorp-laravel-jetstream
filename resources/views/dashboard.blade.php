@@ -52,7 +52,7 @@
                     📚 Catálogo
                 </a>
                 <a href="{{ route('requisicoes.index') }}" class="btn btn-outline btn-secondary">
-                    🔁 Minhas Requisições
+                    ✨ Minhas Requisições
                 </a>
                 <a href="{{ route('admin.requisicoes.index') }}" class="btn btn-outline btn-secondary">
                     🔁 Gestão de Requisições

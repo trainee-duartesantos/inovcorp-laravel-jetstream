@@ -37,18 +37,37 @@ class Livro extends Model
     // 🔓 DESCIFRAR ao ler da base de dados
     public function getPrecoAttribute($value)
     {
-        return $value ? Crypt::decryptString($value) : null;
+        if (!$value) return null;
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value; // já está limpo
+        }
     }
 
     public function getIsbnAttribute($value)
     {
-        return $value ? Crypt::decryptString($value) : null;
+        if (!$value) return null;
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value;
+        }
     }
 
     public function getBibliografiaAttribute($value)
     {
-        return $value ? Crypt::decryptString($value) : null;
+        if (!$value) return null;
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value;
+        }
     }
+
 
     // Relações
     public function autores()

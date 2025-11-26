@@ -4,6 +4,13 @@
         <h1 class="text-3xl font-bold">🏢 Gestão de Editoras</h1>
         <button wire:click="openModal" class="btn btn-primary">➕ Adicionar Editora</button>
     </div>
+    <div class="mb-4">
+        <input type="text"
+            wire:model.live="search"
+            class="input input-bordered w-full"
+            placeholder="Pesquisar editora...">
+    </div>
+
 
     <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
         <table class="table w-full">

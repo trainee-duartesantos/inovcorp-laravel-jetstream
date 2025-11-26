@@ -1,49 +1,51 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="p-6 bg-base-200 min-h-screen">
+    <div class="p-6 bg-base-200 min-h-screen">
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold flex items-center gap-2">
-            🔄 Gestão de Requisições
-        </h1>
-    </div>
-
-    {{-- ALERTAS --}}
-    @if(session('success'))
-        <div class="alert alert-success mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-error mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    {{-- INDICADORES --}}
-    <div class="stats shadow mb-6">
-        <div class="stat">
-            <div class="stat-title">Requisições Ativas</div>
-            <div class="stat-value text-warning">{{ $ativas }}</div>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold flex items-center gap-2">
+                🔄 Gestão de Requisições
+            </h1>
         </div>
 
-        <div class="stat">
-            <div class="stat-title">Atrasadas</div>
-            <div class="stat-value text-error">{{ $atrasadas }}</div>
+        {{-- ALERTAS --}}
+        @if(session('success'))
+            <div class="alert alert-success mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-error mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- INDICADORES --}}
+        <div class="stats stats-horizontal shadow mb-6 w-full flex justify-between gap-6">
+            <div class="stat">
+                <div class="stat-title">Requisições Ativas:</div>
+                <div class="stat-value text-warning">{{ $ativas }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Atrasadas:</div>
+                <div class="stat-value text-error">{{ $atrasadas }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Últimos 30 dias:</div>
+                <div class="stat-value text-info">{{ $ultimos30 }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">Entregues Hoje:</div>
+                <div class="stat-value text-success">{{ $entreguesHoje }}</div>
+            </div>
+
         </div>
 
-        <div class="stat">
-            <div class="stat-title">Últimos 30 dias</div>
-            <div class="stat-value text-info">{{ $ultimos30 }}</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-title">Entregues Hoje</div>
-            <div class="stat-value text-success">{{ $entreguesHoje }}</div>
-        </div>
-    </div>
 
     {{-- FILTROS (URL ?filtro=...) --}}
     <div class="flex flex-wrap gap-2 mb-4">

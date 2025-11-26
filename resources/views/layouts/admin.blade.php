@@ -56,7 +56,7 @@
                     🔁 Requisições
                 </a>
             </li>
-            
+
             <li>
                 <a href="{{ route('admin.googlebooks.search') }}"
                 class="{{ request()->routeIs('admin.googlebooks.search') ? 'active bg-base-100 font-semibold' : '' }}">
@@ -65,7 +65,7 @@
             </li>
 
 
-            <li><a href="{{ route('dashboard') }}">📌 Dashboard</a></li>
+            <li><a href="{{ route('dashboard') }}">📊 Dashboard</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

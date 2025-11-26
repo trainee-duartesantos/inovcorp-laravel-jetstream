@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\RequisicaoCreatedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 
 
 class RequisicaoController extends Controller
@@ -81,7 +83,7 @@ class RequisicaoController extends Controller
         Mail::to($user->email)->send(new RequisicaoCreatedMail($requisicao));
 
         // Temporariamente sem envio para admin, para evitar erro Mailtrap
-        \Log::info("Envio a admin desativado para evitar limite Mailtrap.");
+        Log::info("Envio a admin desativado para evitar limite Mailtrap.");
 
 
         // 5️⃣ Atualizar disponibilidade

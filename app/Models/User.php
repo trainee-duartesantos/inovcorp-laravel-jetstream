@@ -9,6 +9,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property \Illuminate\Database\Eloquent\Collection $requisicoes
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany requisicoes()
+ */
+
 class User extends Authenticatable
 {
     use HasApiTokens;

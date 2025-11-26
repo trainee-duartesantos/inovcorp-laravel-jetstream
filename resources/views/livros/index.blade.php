@@ -7,6 +7,72 @@
         <h1 class="text-3xl font-bold mb-6 flex justify-between items-center">
             📚 Catálogo de Livros
         </h1>
+        <div class="relative mb-6">
+            <input type="text" id="google-search" class="input input-bordered w-full"
+                placeholder="🔍 Pesquisar livros na Google Books...">
+            <div id="google-results"
+                class="absolute w-full mt-1 bg-white border rounded-lg shadow-lg z-50 hidden">
+            </div>
+            <script>
+                let timeout = null;
+
+                document.getElementById('google-search').addEventListener('keyup', function() {
+                    clearTimeout(timeout);
+                    let query = this.value.trim();
+
+                    if (query.length < 3) {
+                        document.getElementById('google-results').classList.add('hidden');
+                        return;
+                    }
+
+                    timeout = setTimeout(() => fetchGoogleBooks(query), 400);
+                });
+
+                function fetchGoogleBooks(query) {
+                    fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5`)
+                        .then(res => res.json())
+                        .then(data => showResults(data.items || []));
+                }
+
+                function showResults(books) {
+                    const container = document.getElementById('google-results');
+
+                    if (!books.length) {
+                        container.innerHTML = `<p class="p-3 text-gray-500">Nenhum resultado encontrado…</p>`;
+                        container.classList.remove('hidden');
+                        return;
+                    }
+
+                    container.innerHTML = books.map(b => {
+                        const info = b.volumeInfo;
+                        const img = info.imageLinks?.thumbnail || 'https://via.placeholder.com/50';
+                        const autores = info.authors?.join(', ') || 'Autor desconhecido';
+
+                        return `
+                        <div class="p-3 border-b flex justify-between items-center hover:bg-gray-100">
+                            <div class="flex items-center gap-3">
+                                <img src="${img}" class="w-10 h-14 object-cover rounded shadow">
+                                <div>
+                                    <strong>${info.title}</strong><br>
+                                    <span class="text-xs">${autores}</span>
+                                </div>
+                            </div>
+                            <form method="POST" action="{{ route('admin.googlebooks.import') }}">
+                                @csrf
+                                <input type="hidden" name="book" value='${JSON.stringify(b)}'>
+                                <button class="btn btn-xs btn-primary">
+                                    📥 Importar
+                                </button>
+                            </form>
+                        </div>`;
+                    }).join('');
+
+                    container.classList.remove('hidden');
+                }
+            </script>
+
+        </div>
+
 
         @include('components.alertas')
 

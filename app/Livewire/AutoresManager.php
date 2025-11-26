@@ -19,6 +19,7 @@ class AutoresManager extends Component
     public $nome;
     public $foto;          // novo upload
     public $foto_atual;    // caminho já guardado
+    public $search = '';
 
     protected $rules = [
         'nome' => 'required|string|max:255',
@@ -97,9 +98,16 @@ class AutoresManager extends Component
 
     public function render()
     {
-        // Listagem simples sem paginação
-        $autores = Autor::orderBy('id', 'desc')->get();
+        $autores = \App\Models\Autor::query()
+            ->when($this->search, function ($query) {
+                $query->where('nome', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('nome')
+            ->paginate(10);
 
-        return view('livewire.autores-manager', compact('autores'));
+        return view('livewire.autores-manager', [
+            'autores' => $autores,
+        ]);
     }
+
 }

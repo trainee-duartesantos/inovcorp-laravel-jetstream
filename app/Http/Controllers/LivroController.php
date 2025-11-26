@@ -36,9 +36,8 @@ class LivroController extends Controller
             ->orderByDesc('data_requisicao')
             ->get();
 
-        return view('livros.index', [
-            'livros' => Livro::with(['editora'])->get()
-        ]);
+        return view('livros.show', compact('livro', 'historico'));
     }
+
 
 }

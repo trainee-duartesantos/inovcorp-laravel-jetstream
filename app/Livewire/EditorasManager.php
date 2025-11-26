@@ -19,6 +19,7 @@ class EditorasManager extends Component
     public $nome;
     public $logotipo;         // novo upload
     public $logotipo_atual;   // caminho já guardado
+    public $search = '';
 
     protected $rules = [
         'nome' => 'required|string|max:255',
@@ -95,8 +96,16 @@ class EditorasManager extends Component
 
     public function render()
     {
-        $editoras = Editora::orderBy('id', 'desc')->get();
+        $editoras = \App\Models\Editora::query()
+            ->when($this->search, function ($query) {
+                $query->where('nome', 'like', '%' . $this->search . '%');
+            })
+            ->orderBy('nome')
+            ->paginate(10);
 
-        return view('livewire.editoras-manager', compact('editoras'));
+        return view('livewire.editoras-manager', [
+            'editoras' => $editoras
+        ]);
     }
+
 }

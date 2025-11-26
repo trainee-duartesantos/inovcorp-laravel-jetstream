@@ -66,18 +66,14 @@
 
     function formatPreco(value) {
         if (value == null || value === "") return "—";
-        const num = parseFloat(
-            String(value).replace(/\./g, "").replace(",", ".")
-        );
+        const num = parseFloat(String(value));
         if (isNaN(num)) return escapeHtml(value);
         return num.toFixed(2).replace(".", ",") + "€";
     }
 
     function parsePrecoNum(value) {
         if (value == null || value === "") return 0;
-        const num = parseFloat(
-            String(value).replace(/\./g, "").replace(",", ".")
-        );
+        const num = parseFloat(String(value));
         return isNaN(num) ? 0 : num;
     }
 
