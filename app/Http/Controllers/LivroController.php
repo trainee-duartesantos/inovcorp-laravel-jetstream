@@ -36,8 +36,36 @@ class LivroController extends Controller
             ->orderByDesc('data_requisicao')
             ->get();
 
-        return view('livros.show', compact('livro', 'historico'));
+        // === 📡 Sugestões Google Books ===
+        $query = $livro->nome;
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::get(
+                'https://www.googleapis.com/books/v1/volumes',
+                [
+                    'q' => $query,
+                    'maxResults' => 6,
+                    // 'key' => config('services.google_books.key') // opcional se tiver key
+                ]
+            );
+
+            $data = $response->json();
+            $sugestoes = collect($data['items'] ?? [])
+                ->filter(function ($item) use ($livro) {
+                    return ($item['volumeInfo']['title'] ?? '') !== $livro->nome;
+                })
+                ->take(3);
+        } catch (\Exception $e) {
+            $sugestoes = collect();
+        }
+
+        return view('livros.show', [
+            'livro' => $livro,
+            'historico' => $historico,
+            'sugestoes' => $sugestoes,
+        ]);
     }
+
 
 
 }

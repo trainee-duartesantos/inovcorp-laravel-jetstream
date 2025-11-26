@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection $requisicoes
@@ -62,6 +63,34 @@ class User extends Authenticatable
     public function requisicoes()
     {
         return $this->hasMany(\App\Models\Requisicao::class);
+    }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = Crypt::encryptString($value);
+    }
+
+    public function getNameAttribute($value)
+    {
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value; // caso já esteja limpo
+        }
+    }
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = Crypt::encryptString($value);
+    }
+
+    public function getEmailAttribute($value)
+    {
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Exception $e) {
+            return $value;
+        }
     }
 
     
