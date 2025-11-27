@@ -95,4 +95,10 @@ class Livro extends Model
         return $query->orWhere(DB::raw("CAST(AES_DECRYPT($column, '" . config('app.key') . "') AS CHAR)"), $operator, $value);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class);
+    }
+
+
 }

@@ -73,6 +73,10 @@ Route::middleware([
         Route::post('/requisicoes', [RequisicaoController::class, 'store'])
             ->name('requisicoes.store');
 
+        Route::post('/livros/{livro}/review', [LivroController::class, 'review'])
+            ->name('livros.review')
+            ->middleware('auth');
+
 
     // Export CSV
     Route::middleware(['auth', 'verified', 'admin'])
