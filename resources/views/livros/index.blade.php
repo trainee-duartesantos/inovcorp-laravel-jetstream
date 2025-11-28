@@ -1,12 +1,17 @@
 @extends('layouts.app')
 
+@push('styles')
+    {{-- CSS específico do dashboard --}}
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+@endpush
+
 @section('content')
 
     <div class="max-w-6xl mx-auto mt-6">
         <div class="max-w-6xl mx-auto mt-6">
-        <h1 class="text-3xl font-bold mb-6 flex justify-between items-center">
-            📚 Catálogo de Livros
-        </h1>
+            <h1 class="text-3xl font-bold mb-6 flex justify-between items-center">
+                📚 Catálogo de Livros
+            </h1>
         <div class="relative mb-6">
             <input type="text" id="google-search" class="input input-bordered w-full"
                 placeholder="🔍 Pesquisar livros na Google Books...">
@@ -60,7 +65,7 @@
                             <form method="POST" action="{{ route('admin.googlebooks.import') }}">
                                 @csrf
                                 <input type="hidden" name="book" value='${JSON.stringify(b)}'>
-                                <button class="btn btn-xs btn-primary">
+                                <button class="btn btn-xs btn-secondary">
                                     📥 Importar
                                 </button>
                             </form>
@@ -83,7 +88,7 @@
         </form>
 
     </div>
-
+    
     <table class="table w-full bg-white shadow rounded-lg">
         <thead class="bg-gray-800 text-white">
             <tr>
@@ -98,8 +103,13 @@
             @foreach($livros as $livro)
             <tr>
                 <td class="p-2">
-                    <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/60' }}"
-                        class="w-12 h-16 object-cover rounded">
+                    @php
+                        $capa = $livro->capa_url
+                            ? asset('storage/'.$livro->capa_url)
+                            : asset('storage/images/placeholders/book-placehorlder.png');
+                    @endphp
+
+                    <img src="{{ $capa }}" class="w-12 h-16 object-cover rounded shadow-md">
                 </td>
 
                 <td>{{ $livro->nome }}</td>
@@ -121,5 +131,11 @@
         </tbody>
     </table>
 </div>
-
+    <div >
+    <footer class="footer sm:footer-horizontal footer-center">
+        <aside>
+            <p>Copyright © All right reserved by Inovcorp Group</p>
+        </aside>
+    </footer>
+</div>
 @endsection

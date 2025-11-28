@@ -12,44 +12,58 @@
     </div>
 
 
-    <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
-        <table class="table w-full">
-            <thead class="bg-base-300 text-base-content">
-                <tr>
-                    <th>Foto</th>
-                    <th>Nome</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
+    {{-- DESKTOP: tabela responsiva --}}
+<div class="overflow-x-auto bg-base-100 shadow rounded-lg hidden md:block">
+    <table class="table w-full">
+        <thead class="bg-base-300 text-base-content">
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th class="text-right">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($autores as $autor)
+            <tr>
+                <td class="p-2">
+                    <img src="{{ $autor->foto_url ? asset('storage/'.$autor->foto_url) : asset('storage/images/placeholders/author.png') }}"
+                         class="w-12 h-12 object-cover rounded-full shadow">
+                </td>
+                <td class="font-medium">{{ $autor->nome }}</td>
+                <td class="text-right">
+                    <button wire:click="edit({{ $autor->id }})" class="btn btn-sm btn-primary">✏ Editar</button>
+                    <button wire:click="confirmDelete({{ $autor->id }})" class="btn btn-sm btn-error">🗑 Apagar</button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
-            <tbody>
-                @foreach($autores as $autor)
-                    <tr>
-                        <td>
-                            @if($autor->foto)
-                                <img src="{{ asset('storage/'.$autor->foto) }}"
-                                    class="w-12 h-12 object-cover rounded-full shadow">
-                            @else
-                                <img src="{{ asset('storage/images/placeholders/placeholder-author.jpg') }}"
-                                    class="w-12 h-12 rounded-full shadow">
-                            @endif
-                        </td>
-                        <td class="font-semibold">
-                            {{ $autor->nome }}
-                        </td>
-                        <td class="flex gap-2">
-                            <button wire:click="edit({{ $autor->id }})" class="btn btn-xs btn-info">
-                                ✏ Editar
-                            </button>
-                            <button wire:click="confirmDelete({{ $autor->id }})" class="btn btn-xs btn-error">
-                                🗑 Apagar
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+{{-- MOBILE: cards responsivos --}}
+<div class="grid grid-cols-1 gap-4 md:hidden mt-4">
+    @foreach($autores as $autor)
+        <div class="card bg-base-100 shadow p-4 flex items-center gap-4">
+
+            {{-- Foto --}}
+            <img src="{{ $autor->foto_url ? asset('storage/images/autores/'.$autor->foto_url) : asset('storage/images/placeholder-author.jpg') }}"
+                 class="w-16 h-16 object-cover rounded-full shadow">
+
+            {{-- Nome --}}
+            <div class="flex-1">
+                <h3 class="font-semibold text-lg">{{ $autor->nome }}</h3>
+            </div>
+
+            {{-- Botões --}}
+            <div class="flex flex-col gap-1">
+                <button wire:click="edit({{ $autor->id }})" class="btn btn-xs btn-primary">✏ Editar / Alterar</button>
+                <button wire:click="confirmDelete({{ $autor->id }})" class="btn btn-xs btn-error">🗑 Apagar</button>
+            </div>
+
+        </div>
+    @endforeach
+</div>
+
 
 
     {{-- MODAL CRIAR/EDITAR --}}

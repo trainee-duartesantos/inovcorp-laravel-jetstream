@@ -12,43 +12,58 @@
     </div>
 
 
-    <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
+    {{-- Tabela — Desktop apenas --}}
+    <div class="overflow-x-auto bg-base-100 shadow rounded-lg hidden md:block">
         <table class="table w-full">
             <thead class="bg-base-300 text-base-content">
                 <tr>
-                    <th>Logotipo</th>
+                    <th>Logo</th>
                     <th>Nome</th>
-                    <th>Ações</th>
+                    <th class="text-right">Ações</th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach($editoras as $editora)
-                    <tr>
-                        <td>
-                            @if($editora->logotipo)
-                                <img src="{{ asset('storage/'.$editora->logotipo) }}"
-                                    class="w-12 h-12 object-cover rounded shadow">
-                            @else
-                                <img src="{{ asset('storage/images/placeholders/placeholder-publisher.svg') }}"
-                                    class="w-10 h-10">
-                            @endif
-                        </td>
-
-                        <td class="font-semibold">{{ $editora->nome }}</td>
-
-                        <td class="flex gap-2">
-                            <button wire:click="edit({{ $editora->id }})"
-                                class="btn btn-xs btn-info">✏ Editar</button>
-
-                            <button wire:click="confirmDelete({{ $editora->id }})"
-                                class="btn btn-xs btn-error">🗑 Apagar</button>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="p-2">
+                        <img src="{{ $editora->logotipo ? asset('storage/images/editoras'.$editora->logotipo) : asset('storage/images/placeholders/publisher.png') }}"
+                            class="w-12 h-12 object-contain rounded">
+                    </td>
+                    <td class="font-medium">{{ $editora->nome }}</td>
+                    <td class="text-right">
+                        <button wire:click="edit({{ $editora->id }})" class="btn btn-sm btn-primary">✏ Editar</button>
+                        <button wire:click="confirmDelete({{ $editora->id }})" class="btn btn-sm btn-error">🗑 Apagar</button>
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    {{-- Cards — Mobile --}}
+    <div class="grid grid-cols-1 gap-4 md:hidden">
+        @foreach($editoras as $editora)
+            <div class="card bg-base-100 shadow-md p-4 flex items-center gap-4">
+
+                {{-- Logo --}}
+                <img src="{{ $editora->logotipo ? asset('storage/'.$editora->logotipo) : asset('/storage/images/placeholders/placeholder-publisher.svg') }}"
+                    class="w-16 h-16 object-contain rounded">
+
+                {{-- Info --}}
+                <div class="flex-1">
+                    <h3 class="font-bold text-lg">{{ $editora->nome }}</h3>
+                </div>
+
+                {{-- Ações --}}
+                <div class="flex flex-col gap-1">
+                    <button wire:click="edit({{ $editora->id }})" class="btn btn-xs btn-primary">✏ Editar / Alterar</button>
+                    <button wire:click="confirmDelete({{ $editora->id }})" class="btn btn-xs btn-error">🗑 Apagar</button>
+                </div>
+
+            </div>
+        @endforeach
+    </div>
+
 
 
     {{-- Modal Criar/Editar --}}

@@ -50,33 +50,33 @@
     {{-- FILTROS (URL ?filtro=...) --}}
     <div class="flex flex-wrap gap-2 mb-4">
         <a href="{{ route('admin.requisicoes.index', ['filtro' => 'todas']) }}"
-           class="btn btn-sm {{ $filtro === 'todas' ? 'btn-primary' : 'btn-ghost' }}">
+           class="btn btn-sm {{ $filtro === 'todas' ? 'btn-primary text-white' : 'btn-ghost' }}">
             Todas
         </a>
 
         <a href="{{ route('admin.requisicoes.index', ['filtro' => 'ativas']) }}"
-           class="btn btn-sm {{ $filtro === 'ativas' ? 'btn-primary' : 'btn-ghost' }}">
+           class="btn btn-sm {{ $filtro === 'ativas' ? 'btn-primary text-white' : 'btn-ghost' }}">
             Ativas
         </a>
 
         <a href="{{ route('admin.requisicoes.index', ['filtro' => 'atrasadas']) }}"
-           class="btn btn-sm {{ $filtro === 'atrasadas' ? 'btn-primary' : 'btn-ghost' }}">
+           class="btn btn-sm {{ $filtro === 'atrasadas' ? 'btn-primary text-white' : 'btn-ghost' }}">
             Atrasadas
         </a>
 
         <a href="{{ route('admin.requisicoes.index', ['filtro' => 'entregues']) }}"
-           class="btn btn-sm {{ $filtro === 'entregues' ? 'btn-primary' : 'btn-ghost' }}">
+           class="btn btn-sm {{ $filtro === 'entregues' ? 'btn-primary text-white' : 'btn-ghost' }}">
             Entregues
         </a>
 
         <a href="{{ route('admin.requisicoes.index', ['filtro' => '30dias']) }}"
-           class="btn btn-sm {{ $filtro === '30dias' ? 'btn-primary' : 'btn-ghost' }}">
+           class="btn btn-sm {{ $filtro === '30dias' ? 'btn-primary text-white' : 'btn-ghost' }}">
             Últimos 30 dias
         </a>
     </div>
 
-    {{-- TABELA --}}
-    <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
+    {{-- Tabela Desktop --}}
+    <div class="overflow-x-auto bg-base-100 shadow rounded-lg hidden md:block">
         <table class="table w-full">
             <thead class="bg-base-300 text-base-content">
                 <tr>
@@ -85,72 +85,98 @@
                     <th>Livro</th>
                     <th>Data Requisição</th>
                     <th>Data Prevista</th>
-                    <th>Dias decorridos</th>  
+                    <th>Dias decorridos</th>
                     <th>Estado</th>
                     <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($requisicoes as $requisicao)
-                    <tr>
-                        <td>{{ $requisicao->numero ?? $requisicao->id }}</td>
-                        <td>{{ $requisicao->user->name ?? '—' }}</td>
-                        <td>
-                            <a href="{{ route('admin.requisicoes.show', $requisicao->id) }}"
-                               class="text-blue-600 hover:underline">
-                                {{ $requisicao->livro->nome ?? '—' }}
-                            </a>
-                        </td>
-                        <td>{{ optional($requisicao->data_requisicao)->format('d/m/Y') }}</td>
-                        <td>{{ optional($requisicao->data_prevista)->format('d/m/Y') }}</td>
+                @foreach($requisicoes as $requisicao)
+                <tr>
+                    <td>{{ $requisicao->numero ?? $requisicao->id }}</td>
+                    <td>{{ $requisicao->user->name }}</td>
+                    <td>{{ $requisicao->livro->nome }}</td>
+                    <td>{{ $requisicao->data_requisicao->format('d/m/Y') }}</td>
+                    <td>{{ $requisicao->data_prevista->format('d/m/Y') }}</td>
 
-                        {{-- 👇 Dias decorridos (usa accessor do model) --}}
-                        <td>
-                            @if(!is_null($requisicao->dias_decorridos))
-                                <span class="badge badge-ghost">
-                                    {{ $requisicao->dias_decorridos }} dias
-                                </span>
-                            @else
-                                —
-                            @endif
-                        </td>
+                    <td>
+                        <span class="badge badge-ghost">
+                            {{ (int) $requisicao->dias_decorridos }} dias
+                        </span>
+                    </td>
 
-                        {{-- Estado com badge daisyUI --}}
-                        <td>
-                            <span class="badge {{ $requisicao->estado_badge }}">
-                                {{ $requisicao->estado_formatado }}
+                    <td>
+                        <span class="badge {{ $requisicao->estado_badge }}">
+                            {{ $requisicao->estado_formatado }}
+                        </span>
+                    </td>
+
+                    <td>
+                        @if(in_array($requisicao->estado, ['ativa','atrasada']))
+                            <form action="{{ route('admin.requisicoes.entregar', $requisicao->id) }}"
+                                method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-xs btn-success">
+                                    ✔ Confirmar Entrega
+                                </button>
+                            </form>
+                        @else
+                            <span class="text-xs text-base-content/60">
+                            Entregue em {{ $requisicao->data_entrega?->format('d/m/Y') }}
                             </span>
-                        </td>
-
-                        <td>
-                            @if(in_array($requisicao->estado, ['ativa', 'atrasada']))
-                                <form action="{{ route('admin.requisicoes.entregar', $requisicao->id) }}"
-                                      method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        ✅ Confirmar Entrega
-                                    </button>
-                                </form>
-                            @else
-                                <span class="text-xs text-base-content/60">
-                                    @if($requisicao->data_entrega)
-                                        Entregue em {{ $requisicao->data_entrega->format('d/m/Y') }}
-                                    @else
-                                        —
-                                    @endif
-                                </span>
-                            @endif
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="8" class="text-center py-6 text-base-content/60">
-                            Ainda não existem requisições.
-                        </td>
-                    </tr>
-                @endforelse
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
-</div>
+
+    {{-- Cards Mobile --}}
+    <div class="grid grid-cols-1 gap-4 md:hidden">
+        @foreach($requisicoes as $requisicao)
+        <div class="card bg-base-100 shadow">
+            <div class="card-body space-y-2">
+
+                <h3 class="font-bold text-lg">{{ $requisicao->livro->nome }}</h3>
+
+                <p class="text-sm"><strong>📌 Cidadão:</strong> {{ $requisicao->user->name }}</p>
+
+                <p class="text-sm">
+                    <strong>📅 Requisição:</strong> {{ $requisicao->data_requisicao->format('d/m/Y') }}
+                </p>
+                <p class="text-sm">
+                    <strong>📆 Prevista:</strong> {{ $requisicao->data_prevista->format('d/m/Y') }}
+                </p>
+
+                <p class="text-sm">
+                    <strong>📈 Dias:</strong>
+                    {{ (int) $requisicao->dias_decorridos }} dias
+                </p>
+
+                <span class="badge {{ $requisicao->estado_badge }}">
+                    {{ $requisicao->estado_formatado }}
+                </span>
+
+                <div class="pt-3">
+                    @if(in_array($requisicao->estado,['ativa','atrasada']))
+                        <form action="{{ route('admin.requisicoes.entregar', $requisicao->id) }}"
+                            method="POST">
+                            @csrf
+                            <button class="btn btn-success btn-sm w-full">
+                                ✔ Confirmar Entrega
+                            </button>
+                        </form>
+                    @else
+                        <span class="text-xs text-base-content/60">
+                            Entregue em {{ $requisicao->data_entrega?->format('d/m/Y') }}
+                        </span>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+        @endforeach
+    </div>
+
 @endsection

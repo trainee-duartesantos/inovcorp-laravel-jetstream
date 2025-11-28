@@ -62,14 +62,11 @@ class Requisicao extends Model
     
     public function getDiasDecorridosAttribute()
     {
-        if (!$this->data_requisicao) {
-            return null;
-        }
+        if (!$this->data_requisicao) return null;
 
-        $fim = $this->data_entrega ?? now();
-
-        return $this->data_requisicao->diffInDays($fim);
+        return (int) now()->diffInRealDays($this->data_requisicao);
     }
+
 
     public function getEstadoFormatadoAttribute()
     {
