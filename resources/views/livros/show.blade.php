@@ -70,52 +70,91 @@
     </div>
 
 
-    {{-- TAB: Reviews --}}
-    <div id="tab-reviews" class="tab-content hidden bg-base-100 p-6 rounded-xl shadow-lg space-y-6">
-        
-        {{-- Resumo --}}
-        <div>
-            <h2 class="text-2xl font-semibold mb-2">Avaliações dos leitores</h2>
+    {{-- ⭐ Secção de Reviews --}}
+    <div class="mt-10 bg-white p-6 rounded-lg shadow-md">
 
-            <p class="text-lg flex items-center gap-2 font-semibold">
-                ⭐ {{ $mediaRating ?? 0 }} / 5 
-                <span class="text-base-content/60 text-sm">({{ $totalReviews }} avaliações)</span>
-            </p>
-        </div>
+        <h2 class="text-2xl font-bold mb-4">⭐ Avaliações dos Leitores</h2>
 
-        {{-- Form Avaliação --}}
-        @auth
-            <form action="{{ route('livros.review', $livro) }}" method="POST" class="space-y-3">
-                @csrf
-                <select name="rating" class="select select-bordered w-full" required>
-                    <option value="">Escolha...</option>
-                    @for($i=1; $i<=5; $i++)
-                        <option value="{{ $i }}">{{ $i }} ⭐</option>
-                    @endfor
-                </select>
-
-                <textarea name="comment" class="textarea textarea-bordered w-full"
-                    placeholder="Comentário (opcional)"></textarea>
-
-                <button class="btn btn-primary w-full md:w-auto">💾 Guardar avaliação</button>
-            </form>
-        @endauth
-
-        {{-- Lista de Reviews --}}
-        @foreach($livro->reviews()->latest()->get() as $review)
-            <div class="border-b pb-3">
-                <p class="font-semibold">{{ $review->user->name }}</p>
-                <p class="text-warning">{{ str_repeat('⭐', $review->rating) }}</p>
-                @if($review->comment)
-                    <p class="text-sm mt-1">{{ $review->comment }}</p>
-                @endif
+        @if($totalReviews > 0)
+            <div class="mb-6">
+                <p class="text-lg">
+                    <strong>Média:</strong>
+                    <span class="text-yellow-500">{{ $mediaRating }}★</span>
+                    <span class="text-gray-600 text-sm">
+                        ({{ $totalReviews }} avaliação{{ $totalReviews > 1 ? 'es' : '' }})
+                    </span>
+                </p>
             </div>
-        @endforeach
 
-        @if($totalReviews == 0)
-            <p class="text-base-content/50 italic">Ainda sem avaliações.</p>
+            <div class="space-y-4">
+                @foreach($reviews as $review)
+                    <div class="p-4 border rounded-lg bg-gray-50">
+                        <div class="flex justify-between">
+                            <strong>{{ $review->user->name }}</strong>
+
+                            <span class="text-yellow-500 font-semibold">
+                                {{ $review->rating }}★
+                            </span>
+                        </div>
+                        
+                        <p class="text-sm text-gray-700 mt-2">
+                            {{ $review->comment ?? 'Sem comentário' }}
+                        </p>
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            {{ $review->created_at->format('d/m/Y H:i') }}
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+
+        @else
+            <p class="text-gray-600">
+                🤷 Este livro ainda não tem avaliações aprovadas.
+            </p>
         @endif
     </div>
+
+    {{-- ⭐ Formulário de Review (apenas se devolveu o livro) --}}
+    @if($podeAvaliar)
+
+        <div class="mt-10 bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold mb-4">Dê a sua avaliação</h3>
+
+            <form action="{{ route('livros.review', $livro) }}" method="POST">
+                @csrf
+                <input type="hidden" name="requisicao_id"
+                    value="{{ $livro->requisicoes->where('user_id', auth()->id())->where('estado','entregue')->first()->id }}">
+
+                {{-- Rating --}}
+                <label class="block font-bold mb-2">Classificação:</label>
+                <select name="rating" required class="border rounded p-2 mb-4">
+                    <option value="">Selecione</option>
+                    <option value="1">1 ★</option>
+                    <option value="2">2 ★★</option>
+                    <option value="3">3 ★★★</option>
+                    <option value="4">4 ★★★★</option>
+                    <option value="5">5 ★★★★★</option>
+                </select>
+
+                {{-- Comentário --}}
+                <label class="block font-bold mb-2">Comentário:</label>
+                <textarea name="comment" rows="3"
+                    class="border rounded p-2 w-full mb-4"
+                    placeholder="O que achou do livro? (opcional)"></textarea>
+
+                <button class="btn btn-warning mt-4 px-4 py-2 text-dark font-semibold rounded shadow hover:bg-yellow-600 transition">
+                    ⭐ Submeter Avaliação
+                </button>
+            </form>
+        </div>
+
+    @elseif(!auth()->check())
+        <p class="mt-10 text-gray-600">
+            🔐 <a href="{{ route('login') }}" class="text-blue-600 underline">Faça login</a>
+            para avaliar este livro.
+        </p>
+    @endif
 
 
     {{-- TAB: Sugestões --}}
@@ -136,7 +175,7 @@
                             </figure>
                         @endif
                         <div class="card-body">
-                            <h3 class="font-semibold mb-1 text-sm">{{ $info['title'] }}</h3>
+                            <h3 class="font-semibold mb-1 text-sm">{{ $info['title'] ?? 'Título desconhecido' }}</h3>
                             <p class="text-xs text-base-content/70">{{ $info['authors'][0] ?? 'Autor desconhecido' }}</p>
 
                             @admin

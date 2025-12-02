@@ -5,6 +5,9 @@
     <h1 class="text-2xl font-bold mb-4 flex justify-between">
         📊 Gestão de Avaliações
     </h1>
+    <a href="{{ route('dashboard') }}" class="btn btn-ghost mt-4">
+                ⬅ Voltar ao Dashboard
+            </a>
 
     @if($reviews->count() === 0)
         <div class="alert alert-info text-center">
@@ -35,17 +38,25 @@
                         <button class="btn btn-sm btn-success">Aprovar</button>
                     </form>
 
-                    <form action="{{ route('admin.reviews.update', $review) }}" method="POST" class="inline">
-                        @csrf @method('PUT')
+                    <form method="POST" action="{{ route('admin.reviews.update', $review) }}" 
+                        onsubmit="return confirm('Tem certeza que quer recusar esta avaliação?')">
+                        @csrf
+                        @method('PUT')
                         <input type="hidden" name="status" value="2">
-                        <input type="hidden" name="justification" value="Recusado pelo administrador">
-                        <button class="btn btn-sm btn-error ms-1">Recusar</button>
+
+                        <input type="text" name="justification" class="border rounded px-2 text-sm"
+                            placeholder="Motivo (obrigatório)" required>
+
+                        <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                            Recusar
+                        </button>
                     </form>
                 </td>
             </tr>
             @endforeach
             </tbody>
         </table>
+            
 
         <div class="mt-4">
             {{ $reviews->links() }}

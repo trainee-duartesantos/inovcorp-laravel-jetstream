@@ -57,6 +57,9 @@
                 <a href="{{ route('admin.requisicoes.index') }}" class="btn btn-outline btn-secondary">
                     🔁 Gestão de Requisições
                 </a>
+                <a href="{{ route('admin.reviews.index') }}" class="btn btn-outline btn-secondary">
+                    ⭐ Gestão de Reviews
+                </a>
             </div>
             {{-- ========== TAB LIVROS ========== --}}
             <div id="tab-livros">

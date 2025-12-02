@@ -25,17 +25,18 @@ class ReviewAdminController extends Controller
     {
         $request->validate([
             'status' => 'required|in:1,2',
-            'justification' => 'required_if:status,2',
+            'justification' => 'nullable|string|max:500'
         ]);
 
-        $review->update([
-            'status' => $request->status,
-            'justification' => $request->justification,
-        ]);
+        $review->status = $request->status;
+        $review->justification = $request->justification;
+        $review->save();
 
+        // Enviar email ao utilizador da review
         Mail::to($review->user->email)
             ->send(new ReviewStatusUpdateMail($review));
 
-        return back()->with('success', 'Estado atualizado com sucesso!');
+        return back()->with('success', 'Estado da avaliação atualizado com sucesso!');
     }
+
 }

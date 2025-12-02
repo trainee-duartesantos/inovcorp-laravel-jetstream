@@ -58,6 +58,13 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.reviews.index') }}"
+                class="{{ request()->routeIs('admin.reviews.index') ? 'active bg-base-100 font-semibold' : '' }}">
+                    ⭐ Reviews
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('admin.googlebooks.search') }}"
                 class="{{ request()->routeIs('admin.googlebooks.search') ? 'active bg-base-100 font-semibold' : '' }}">
                     🌍 Importar Livros API

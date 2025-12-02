@@ -33,15 +33,23 @@ class LivroController extends Controller
         $livro->load([
             'editora',
             'autores',
-            'reviews.user', // ⭐ carregar utilizadores das reviews
+            'reviews.user',
             'requisicoes.user'
         ]);
 
-        // 📌 Dados resumidos de reviews
-        $mediaRating = round($livro->reviews()->avg('rating'), 1);
-        $totalReviews = $livro->reviews()->count();
+        // 📌 Apenas reviews aprovadas (status = 1)
+        $reviews = $livro->reviews()
+            ->where('status', 1)
+            ->latest()
+            ->get();
 
-        // 📌 Histórico requisições (como tinhas)
+        // 📌 Dados de rating
+        $mediaRating = $reviews->avg('rating')
+            ? round($reviews->avg('rating'), 1)
+            : null;
+        $totalReviews = $reviews->count();
+
+        // 📌 Histórico requisições (sem alteração)
         $historico = $livro->requisicoes()
             ->with('user')
             ->orderByDesc('data_requisicao')
@@ -66,13 +74,25 @@ class LivroController extends Controller
             $sugestoes = collect();
         }
 
+        $podeAvaliar = false;
+
+        if (auth()->check()) {
+            $podeAvaliar = $livro->requisicoes()
+                ->where('user_id', auth()->id())
+                ->where('estado', 'entregue')
+                ->exists();
+        }
+
         return view('livros.show', compact(
             'livro',
             'historico',
             'sugestoes',
             'mediaRating',
-            'totalReviews'
+            'totalReviews',
+            'reviews',
+            'podeAvaliar'
         ));
+
     }
 
     // 📌 SUBMETER / EDITAR REVIEW
