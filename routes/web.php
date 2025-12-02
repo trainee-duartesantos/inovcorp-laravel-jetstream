@@ -8,6 +8,8 @@ use App\Http\Controllers\RequisicaoController;
 use App\Http\Controllers\Admin\RequisicaoAdminController;
 use App\Http\Controllers\LivroController;
 use App\Http\Controllers\Admin\GoogleBooksController;
+use App\Http\Controllers\Admin\ReviewAdminController;
+
 
 
 Route::get('/welcome', function () {
@@ -59,6 +61,14 @@ Route::middleware([
 
         Route::post('/admin/google-books/import', [GoogleBooksController::class, 'import'])
             ->name('admin.googlebooks.import');
+
+        // Admin - Moderação de Reviews
+        Route::get('/admin/reviews', [ReviewAdminController::class, 'index'])
+            ->name('admin.reviews.index');
+
+        Route::put('/admin/reviews/{review}', [ReviewAdminController::class, 'updateStatus'])
+        ->name('admin.reviews.update');
+
 
 
         // ✅ NOVA ROTA: teste simples à Google Books API
