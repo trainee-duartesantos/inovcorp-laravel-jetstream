@@ -132,10 +132,10 @@
     </table>
 </div>
     <div >
-    <footer class="footer sm:footer-horizontal footer-center">
-        <aside>
-            <p>Copyright © All right reserved by Inovcorp Group</p>
-        </aside>
-    </footer>
-</div>
+        <footer class="footer sm:footer-horizontal footer-center">
+            <aside>
+                <p>Copyright © All right reserved by Inovcorp Group</p>
+            </aside>
+        </footer>
+    </div>
 @endsection

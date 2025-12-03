@@ -100,5 +100,27 @@ class Livro extends Model
         return $this->hasMany(\App\Models\Review::class);
     }
 
+    public static function relacionados(Livro $livro, $limit = 3)
+    {
+        $baseTokens = \App\Helpers\TextSimilarity::tokenize($livro->bibliografia);
+        $baseVector = \App\Helpers\TextSimilarity::vectorize($baseTokens);
+
+        return Livro::where('id', '!=', $livro->id)
+            ->get()
+            ->map(function ($outro) use ($baseVector) {
+                $tokens = \App\Helpers\TextSimilarity::tokenize($outro->bibliografia);
+                $vector = \App\Helpers\TextSimilarity::vectorize($tokens);
+
+                $score = \App\Helpers\TextSimilarity::cosineSimilarity($baseVector, $vector);
+
+                return [
+                    'livro' => $outro,
+                    'score' => $score
+                ];
+            })
+            ->sortByDesc('score')
+            ->take($limit)
+            ->pluck('livro');
+    }
 
 }

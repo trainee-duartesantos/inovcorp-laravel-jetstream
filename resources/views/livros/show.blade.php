@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@push('styles')
+    {{-- CSS específico do dashboard --}}
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+@endpush
+
 @section('content')
 
 <div class="max-w-6xl mx-auto mt-6 space-y-10">
@@ -56,6 +61,7 @@
         <a class="tab tab-active" onclick="openTab(event, 'tab-descricao')">Descrição</a>
         <a class="tab" onclick="openTab(event, 'tab-reviews')">Avaliações ⭐</a>
         <a class="tab" onclick="openTab(event, 'tab-sugestoes')">Sugestões 🔍</a>
+        <a class="tab" onclick="openTab(event, 'tab-relacionados')">Relacionados 📚</a>
         @if(auth()->check() && auth()->user()->isAdmin())
             <a class="tab" onclick="openTab(event, 'tab-historico')">Histórico 📜</a>
         @endif
@@ -196,6 +202,38 @@
 
     </div>
 
+    {{-- TAB: Livros Relacionados --}}
+    <div id="tab-relacionados" class="tab-content hidden bg-base-100 p-6 rounded-xl shadow-lg">
+
+        @if($relacionados->isEmpty())
+            <p class="text-base-content/50">Nenhum livro relacionado encontrado.</p>
+        @else
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+                @foreach($relacionados as $item)
+                    <a href="{{ route('livros.show', $item) }}"
+                    class="card bg-base-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition">
+
+                        <figure class="px-4 pt-4">
+                            <img src="{{ $item->capa_url ? asset('storage/'.$item->capa_url) : 'https://via.placeholder.com/150' }}"
+                                class="rounded-md h-40 object-cover">
+                        </figure>
+
+                        <div class="card-body">
+                            <h3 class="font-semibold mb-1 text-sm">{{ $item->nome }}</h3>
+                            <p class="text-xs text-base-content/70">
+                                {{ $item->autores->pluck('nome')->join(', ') }}
+                            </p>
+                        </div>
+
+                    </a>
+                @endforeach
+
+            </div>
+        @endif
+
+    </div>
+
 
     {{-- TAB: Histórico (Admin Only) --}}
     @if(auth()->check() && auth()->user()->isAdmin())
@@ -215,8 +253,14 @@
             @endforelse
         </div>
     @endif
-
 </div>
+    <div >
+        <footer class="footer sm:footer-horizontal footer-center">
+            <aside>
+                <p>Copyright © All right reserved by Inovcorp Group</p>
+            </aside>
+        </footer>
+    </div>
 
 
 {{-- Script Tabs --}}

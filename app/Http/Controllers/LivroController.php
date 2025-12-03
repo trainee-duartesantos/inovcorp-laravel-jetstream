@@ -83,6 +83,8 @@ class LivroController extends Controller
                 ->exists();
         }
 
+        $relacionados = Livro::relacionados($livro, 3);
+
         return view('livros.show', compact(
             'livro',
             'historico',
@@ -90,7 +92,8 @@ class LivroController extends Controller
             'mediaRating',
             'totalReviews',
             'reviews',
-            'podeAvaliar'
+            'podeAvaliar',
+            'relacionados'
         ));
 
     }
