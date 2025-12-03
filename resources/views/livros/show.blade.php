@@ -206,26 +206,39 @@
     <div id="tab-relacionados" class="tab-content hidden bg-base-100 p-6 rounded-xl shadow-lg">
 
         @if($relacionados->isEmpty())
-            <p class="text-base-content/50">Nenhum livro relacionado encontrado.</p>
+            <p class="text-base-content/60">
+                🤷 Não conseguimos encontrar livros relacionados com base na descrição.
+            </p>
         @else
-            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
 
                 @foreach($relacionados as $item)
-                    <a href="{{ route('livros.show', $item) }}"
-                    class="card bg-base-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition">
+                    @php
+                        $liv = $item['livro'];
+                        $score = round($item['score'] * 100);
+                    @endphp
 
-                        <figure class="px-4 pt-4">
-                            <img src="{{ $item->capa_url ? asset('storage/'.$item->capa_url) : 'https://via.placeholder.com/150' }}"
-                                class="rounded-md h-40 object-cover">
-                        </figure>
+                    <a href="{{ route('livros.show', $liv) }}" class="block">
+                        <div class="card bg-base-200 shadow-md hover:shadow-xl transition h-full">
 
-                        <div class="card-body">
-                            <h3 class="font-semibold mb-1 text-sm">{{ $item->nome }}</h3>
-                            <p class="text-xs text-base-content/70">
-                                {{ $item->autores->pluck('nome')->join(', ') }}
-                            </p>
+                            @php
+                                $capa = $liv->capa_url
+                                    ? asset('storage/' . $liv->capa_url)
+                                    : 'https://via.placeholder.com/150';
+                            @endphp
+
+                            <figure class="px-4 pt-4">
+                                <img src="{{ $capa }}" class="rounded-md h-40 object-cover mx-auto">
+                            </figure>
+
+                            <div class="card-body">
+                                <h3 class="font-semibold text-sm">{{ $liv->nome }}</h3>
+                                <p class="text-xs text-base-content/60">
+                                    Semelhança: {{ $score }}%
+                                </p>
+                            </div>
+
                         </div>
-
                     </a>
                 @endforeach
 
@@ -233,6 +246,7 @@
         @endif
 
     </div>
+
 
 
     {{-- TAB: Histórico (Admin Only) --}}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Livro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Services\BookSimilarityService;
 
 class LivroController extends Controller
 {
@@ -84,6 +85,10 @@ class LivroController extends Controller
         }
 
         $relacionados = Livro::relacionados($livro, 3);
+        
+        // === 📚 LIVROS RELACIONADOS INTELIGENTES (TF-IDF + cosine) ===
+        $service = new BookSimilarityService();
+        $relacionados = $service->getRelatedBooks($livro, 3);
 
         return view('livros.show', compact(
             'livro',
