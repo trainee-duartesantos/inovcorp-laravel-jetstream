@@ -47,6 +47,14 @@
                     🔐 Iniciar sessão
                 </a>
             @endauth
+                @if(!$livro->disponivel)
+                    <form method="POST" action="{{ route('livros.alerta', $livro->id) }}">
+                        @csrf
+                        <button class="btn btn-warning mt-3">
+                            Avisar-me quando estiver disponível
+                        </button>
+                    </form>
+                @endif
 
             <a href="{{ route('livros.index') }}" class="btn btn-ghost mt-4">
                 ⬅ Voltar ao catálogo

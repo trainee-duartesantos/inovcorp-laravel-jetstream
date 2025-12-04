@@ -6,6 +6,9 @@ use App\Models\Livro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Services\BookSimilarityService;
+use App\Models\AlertaLivro;
+use App\Mail\LivroDisponivelMail;
+use Illuminate\Support\Facades\Mail;
 
 class LivroController extends Controller
 {
@@ -129,5 +132,19 @@ class LivroController extends Controller
             ? 'Avaliação registada! ⭐'
             : 'Avaliação atualizada! ⭐'
         );
+    }
+
+    public function alerta(Livro $livro)
+    {
+        if ($livro->disponivel) {
+            return back()->with('error', 'O livro já está disponível!');
+        }
+
+        AlertaLivro::firstOrCreate([
+            'user_id' => auth()->id(),
+            'livro_id' => $livro->id,
+        ]);
+
+        return back()->with('success', 'Será avisado quando o livro estiver disponível 👍');
     }
 }

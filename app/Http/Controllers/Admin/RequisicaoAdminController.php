@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Requisicao;
 use Illuminate\Http\Request;
+use App\Models\AlertaLivro;
+use App\Mail\LivroDisponivelMail;
+use Illuminate\Support\Facades\Mail;
 
 class RequisicaoAdminController extends Controller
 {
@@ -93,6 +96,17 @@ class RequisicaoAdminController extends Controller
             $requisicao->livro->update([
                 'disponivel' => true
             ]);
+        }
+
+        // Enviar alertas
+        $alertas = AlertaLivro::where('livro_id', $requisicao->livro->id)
+            ->where('email_enviado', false)
+            ->get();
+
+        foreach ($alertas as $alerta) {
+            Mail::to($alerta->user->email)->send(new LivroDisponivelMail($requisicao->livro));
+
+            $alerta->update(['email_enviado' => true]);
         }
 
         return redirect()

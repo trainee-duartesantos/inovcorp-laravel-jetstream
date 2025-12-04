@@ -87,6 +87,10 @@ Route::middleware([
             ->name('livros.review')
             ->middleware('auth');
 
+        Route::post('/livros/{livro}/alerta', [LivroController::class, 'alerta'])
+            ->middleware('auth')
+            ->name('livros.alerta');
+
 
     // Export CSV
     Route::middleware(['auth', 'verified', 'admin'])
