@@ -23,7 +23,7 @@ class LivrosSeeder extends Seeder
                 'nome' => 'O Senhor dos Anéis',
                 'editora_id' => $editoraLeya->id,
                 'bibliografia' => 'Uma jornada épica na Terra Média.',
-                'preco' => 24.99,
+                'preco' => "24.99",
                 'capa_url' => 'images/livros/senhor-dos-aneis.jpg'
             ],
             [
@@ -31,7 +31,7 @@ class LivrosSeeder extends Seeder
                 'nome' => '1984',
                 'editora_id' => $editoraPorto->id,
                 'bibliografia' => 'Distopia sobre vigilância e controle governamental.',
-                'preco' => 16.50,
+                'preco' => "16.50",
                 'capa_url' => 'images/livros/1984.jpg'
             ],
         ];

@@ -1,141 +1,92 @@
 @extends('layouts.app')
 
 @push('styles')
-    {{-- CSS específico do dashboard --}}
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 @endpush
 
 @section('content')
 
-    <div class="max-w-6xl mx-auto mt-6">
-        <div class="max-w-6xl mx-auto mt-6">
-            <h1 class="text-3xl font-bold mb-6 flex justify-between items-center">
-                📚 Catálogo de Livros
-            </h1>
-        <div class="relative mb-6">
-            <input type="text" id="google-search" class="input input-bordered w-full"
-                placeholder="🔍 Pesquisar livros na Google Books...">
-            <div id="google-results"
-                class="absolute w-full mt-1 bg-white border rounded-lg shadow-lg z-50 hidden">
-            </div>
-            <script>
-                let timeout = null;
+<div class="max-w-6xl mx-auto mt-10">
 
-                document.getElementById('google-search').addEventListener('keyup', function() {
-                    clearTimeout(timeout);
-                    let query = this.value.trim();
+    {{-- Título --}}
+    <h1 class="text-4xl font-bold mb-8 text-center">
+        📚 Catálogo de Livros
+    </h1>
 
-                    if (query.length < 3) {
-                        document.getElementById('google-results').classList.add('hidden');
-                        return;
-                    }
+    {{-- Barra de pesquisa --}}
+    <form method="GET" action="{{ route('livros.index') }}" class="w-full mb-8">
+        <input type="text" name="q" value="{{ request('q') }}"
+            placeholder="Pesquisar por título, autor, editora ou ISBN..."
+            class="input input-bordered w-full shadow-md" />
+    </form>
 
-                    timeout = setTimeout(() => fetchGoogleBooks(query), 400);
-                });
+    @include('components.alertas')
 
-                function fetchGoogleBooks(query) {
-                    fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5`)
-                        .then(res => res.json())
-                        .then(data => showResults(data.items || []));
-                }
+    {{-- GRID MODERNO --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        @foreach($livros as $livro)
+            <div class="bg-white shadow-lg rounded-xl p-4 hover:shadow-2xl transition border border-gray-200">
 
-                function showResults(books) {
-                    const container = document.getElementById('google-results');
+                {{-- Capa --}}
+                @php
+                    $capa = $livro->capa_url
+                        ? asset('storage/' . $livro->capa_url)
+                        : asset('storage/images/placeholders/book-placeholder.png');
+                @endphp
 
-                    if (!books.length) {
-                        container.innerHTML = `<p class="p-3 text-gray-500">Nenhum resultado encontrado…</p>`;
-                        container.classList.remove('hidden');
-                        return;
-                    }
+                <img src="{{ $capa }}" alt="{{ $livro->nome }}"
+                     class="w-full h-64 object-cover rounded-lg shadow">
 
-                    container.innerHTML = books.map(b => {
-                        const info = b.volumeInfo;
-                        const img = info.imageLinks?.thumbnail || 'https://via.placeholder.com/50';
-                        const autores = info.authors?.join(', ') || 'Autor desconhecido';
+                <div class="mt-4 space-y-1">
 
-                        return `
-                        <div class="p-3 border-b flex justify-between items-center hover:bg-gray-100">
-                            <div class="flex items-center gap-3">
-                                <img src="${img}" class="w-10 h-14 object-cover rounded shadow">
-                                <div>
-                                    <strong>${info.title}</strong><br>
-                                    <span class="text-xs">${autores}</span>
-                                </div>
-                            </div>
-                            <form method="POST" action="{{ route('admin.googlebooks.import') }}">
-                                @csrf
-                                <input type="hidden" name="book" value='${JSON.stringify(b)}'>
-                                <button class="btn btn-xs btn-secondary">
-                                    📥 Importar
-                                </button>
-                            </form>
-                        </div>`;
-                    }).join('');
+                    {{-- Título --}}
+                    <h2 class="text-xl font-semibold text-gray-900 line-clamp-2">
+                        {{ $livro->nome }}
+                    </h2>
 
-                    container.classList.remove('hidden');
-                }
-            </script>
+                    {{-- Autor(es) --}}
+                    <p class="text-gray-700 text-sm">
+                        <strong>Autor:</strong>
+                        {{ $livro->autores->pluck('nome')->join(', ') }}
+                    </p>
 
-        </div>
+                    {{-- Editora --}}
+                    <p class="text-gray-700 text-sm">
+                        <strong>Editora:</strong> {{ $livro->editora->nome }}
+                    </p>
 
+                    {{-- ISBN --}}
+                    <p class="text-gray-700 text-sm">
+                        <strong>ISBN:</strong> {{ $livro->isbn }}
+                    </p>
 
-        @include('components.alertas')
-
-       <form method="GET" action="{{ route('livros.index') }}" class="w-full mb-4">
-            <input type="text" name="q" value="{{ request('q') }}" 
-                placeholder="Pesquisar por título, ISBN ou autor..."
-                class="input input-bordered w-full">
-        </form>
-
-    </div>
-    
-    <table class="table w-full bg-white shadow rounded-lg">
-        <thead class="bg-gray-800 text-white">
-            <tr>
-                <th>Capa</th>
-                <th>Nome</th>
-                <th>Editora</th>
-                <th>Estado</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($livros as $livro)
-            <tr>
-                <td class="p-2">
-                    @php
-                        $capa = $livro->capa_url
-                            ? asset('storage/'.$livro->capa_url)
-                            : asset('storage/images/placeholders/book-placehorlder.png');
-                    @endphp
-
-                    <img src="{{ $capa }}" class="w-12 h-16 object-cover rounded shadow-md">
-                </td>
-
-                <td>{{ $livro->nome }}</td>
-                <td>{{ $livro->editora->nome }}</td>
-
-                <td>
-                    <span class="badge {{ $livro->disponivel ? 'badge-success' : 'badge-error' }}">
+                    {{-- Disponibilidade --}}
+                    <span class="badge mt-2 {{ $livro->disponivel ? 'badge-success' : 'badge-error' }}">
                         {{ $livro->disponivel ? 'Disponível' : 'Requisitado' }}
                     </span>
-                </td>
+                </div>
 
-                <td>
-                    <a href="{{ route('livros.show', $livro) }}" class="btn btn-sm btn-secondary">
-                        Ver detalhes
-                    </a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-    <div >
-        <footer class="footer sm:footer-horizontal footer-center">
-            <aside>
-                <p>Copyright © All right reserved by Inovcorp Group</p>
-            </aside>
-        </footer>
+                {{-- Botão --}}
+                <a href="{{ route('livros.show', $livro) }}"
+                   class="btn btn-secondary w-full mt-4 shadow">
+                    Ver detalhes
+                </a>
+
+            </div>
+        @endforeach
     </div>
+
+    {{-- Paginação --}}
+    <div class="mt-10">
+        {{ $livros->links() }}
+    </div>
+
+</div>
+
+<footer class="footer sm:footer-horizontal footer-center mt-16">
+    <aside>
+        <p>Copyright © All right reserved by Inovcorp Group</p>
+    </aside>
+</footer>
+
 @endsection

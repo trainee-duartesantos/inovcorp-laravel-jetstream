@@ -85,56 +85,48 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Filtros (Exemplo estático, podes ligar a dados reais depois) --}}
+                        {{-- Filtros Dinâmicos --}}
                         <div class="flex justify-center mb-8">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
+
+                                {{-- 🔹 Editora --}}
                                 <div class="flex flex-col">
                                     <label class="text-sm font-semibold text-gray-700 mb-2">Editora</label>
-                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
-                                            onchange="filterTable('livros', this.value, 'editora')">
+                                    <select id="filtro-editora"
+                                        class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
+                                        onchange="filterTable('livros', this.value, 'editora')">
+
                                         <option value="">Todas as editoras</option>
-                                        <option value="Editora Leya">Editora Leya</option>
-                                        <option value="Porto Editora">Porto Editora</option>
-                                        <option value="Penguin Random House">Penguin Random House</option>
                                     </select>
                                 </div>
 
+                                {{-- 🔹 Preço (faixas automáticas) --}}
                                 <div class="flex flex-col">
                                     <label class="text-sm font-semibold text-gray-700 mb-2">Preço</label>
-                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
-                                            onchange="filterTable('livros', this.value, 'preco')">
+                                    <select id="filtro-preco"
+                                        class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
+                                        onchange="filterTable('livros', this.value, 'preco')">
+
                                         <option value="">Qualquer preço</option>
-                                        <option value="0-20">€0 - €20</option>
-                                        <option value="20-40">€20 - €40</option>
-                                        <option value="40+">€40+</option>
                                     </select>
                                 </div>
 
+                                {{-- 🔹 Autor --}}
                                 <div class="flex flex-col">
                                     <label class="text-sm font-semibold text-gray-700 mb-2">Autor</label>
-                                    <select class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
-                                            onchange="filterTable('livros', this.value, 'autor')">
+                                    <select id="filtro-autor"
+                                        class="select select-bordered w-full bg-white shadow-lg rounded-xl border-gray-200"
+                                        onchange="filterTable('livros', this.value, 'autor')">
+
                                         <option value="">Todos os autores</option>
-                                        <option value="J.R.R. Tolkien">J.R.R. Tolkien</option>
-                                        <option value="George Orwell">George Orwell</option>
-                                        <option value="Miguel de Cervantes">Miguel de Cervantes</option>
-                                        <option value="Umberto Eco">Umberto Eco</option>
                                     </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex justify-between items-center text-sm" style="padding: 1rem;">
-                            <span id="result-count-livros" class="text-base-content/70">
-                                Mostrando todos os livros
-                            </span>
-                            <div class="flex gap-2">
-                                <span class="badge badge-ghost" id="active-filters-livros"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 {{-- Tabela + Export CSV --}}
                 <div class="card bg-white shadow-xl">
@@ -304,6 +296,68 @@
                 showTab('livros');
             @endif
         });
+
+        // ========== Preencher selects dinâmicos ==========
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // ========== Filtro Editoras ==========
+            const editoras = window.DATA.editoras;
+            const selectEditoras = document.getElementById('filtro-editora');
+
+            if (selectEditoras) {
+                editoras.forEach(ed => {
+                    const opt = document.createElement('option');
+                    opt.value = ed.nome;
+                    opt.textContent = ed.nome;
+                    selectEditoras.appendChild(opt);
+                });
+            }
+
+            // ========== Filtro Autores ==========
+            const autores = window.DATA.autores;
+            const selectAutores = document.getElementById('filtro-autor');
+
+            if (selectAutores) {
+                autores.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a.nome;
+                    opt.textContent = a.nome;
+                    selectAutores.appendChild(opt);
+                });
+            }
+
+            // ========== Filtro Preços Dinâmicos ==========
+            const livros = window.DATA.livros;
+            const selectPrecos = document.getElementById('filtro-preco');
+
+            if (selectPrecos) {
+                const precos = livros
+                    .map(l => parseFloat(l.preco))
+                    .filter(v => !isNaN(v))
+                    .sort((a,b)=>a-b);
+
+                if (precos.length > 0) {
+                    const min = precos[0];
+                    const max = precos[precos.length - 1];
+                    const mid = (min + max) / 2;
+
+                    const faixas = [
+                        { label: `€${min.toFixed(2)} – €${mid.toFixed(2)}`, value: `${min}-${mid}` },
+                        { label: `€${mid.toFixed(2)} – €${max.toFixed(2)}`, value: `${mid}-${max}` },
+                        { label: `Acima de €${max.toFixed(2)}`, value: `${max}+` },
+                    ];
+
+                    faixas.forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.value;
+                        opt.textContent = f.label;
+                        selectPrecos.appendChild(opt);
+                    });
+                }
+            }
+
+        });
+
         </script>
 
 @endsection

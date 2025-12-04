@@ -59,7 +59,7 @@ class BibliotecaRealSeeder extends Seeder
                 'nome' => 'O Senhor dos Anéis',
                 'editora_id' => $editoraIds['Editora Leya'],
                 'bibliografia' => 'Uma jornada épica pela Terra Média.',
-                'preco' => 24.99,
+                'preco' => "24.99",
                 'capa_url' => 'images/livros/senhor-dos-aneis.jpg'
             ],
             [
@@ -67,7 +67,7 @@ class BibliotecaRealSeeder extends Seeder
                 'nome' => '1984',
                 'editora_id' => $editoraIds['Porto Editora'],
                 'bibliografia' => 'Distopia clássica sobre vigilância governamental.',
-                'preco' => 16.50,
+                'preco' => "16.50",
                 'capa_url' => 'images/livros/1984.jpg'
             ],
             [
@@ -75,7 +75,7 @@ class BibliotecaRealSeeder extends Seeder
                 'nome' => 'Dom Quixote de La Mancha',
                 'editora_id' => $editoraIds['Porto Editora'],
                 'bibliografia' => 'Aventura icónica do cavaleiro andante.',
-                'preco' => 19.99,
+                'preco' => "19.99",
                 'capa_url' => 'images/livros/dom-quixote.jpg'
             ],
             [
@@ -83,7 +83,7 @@ class BibliotecaRealSeeder extends Seeder
                 'nome' => 'O Nome da Rosa',
                 'editora_id' => $editoraIds['Editora Leya'],
                 'bibliografia' => 'Mistério medieval num mosteiro beneditino.',
-                'preco' => 22.75,
+                'preco' => "22.75",
                 'capa_url' => 'images/livros/nome-da-rosa.jpg'
             ],
         ];

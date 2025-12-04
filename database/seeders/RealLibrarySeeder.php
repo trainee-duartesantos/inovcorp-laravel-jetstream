@@ -60,7 +60,7 @@ class RealLibrarySeeder extends Seeder
                 'editora' => 'Leya',
                 'capa' => 'images/livros/senhor-dos-aneis.jpg',
                 'descricao' => 'Uma jornada épica pela Terra Média.',
-                'preco' => 24.99,
+                'preco' => "24.99",
                 'autores' => ['J.R.R. Tolkien'],
             ],
 
@@ -70,7 +70,7 @@ class RealLibrarySeeder extends Seeder
                 'editora' => 'Porto Editora',
                 'capa' => 'images/livros/1984.jpg',
                 'descricao' => 'Distopia clássica sobre vigilância governamental.',
-                'preco' => 16.50,
+                'preco' => "16.50",
                 'autores' => ['George Orwell'],
             ],
 
@@ -80,7 +80,7 @@ class RealLibrarySeeder extends Seeder
                 'editora' => 'Porto Editora',
                 'capa' => 'images/livros/dom-quixote.jpg',
                 'descricao' => 'A aventura épica do cavaleiro andante.',
-                'preco' => 19.99,
+                'preco' => "19.99",
                 'autores' => ['Miguel de Cervantes'],
             ],
 
@@ -90,7 +90,7 @@ class RealLibrarySeeder extends Seeder
                 'editora' => 'Leya',
                 'capa' => 'images/livros/nome-da-rosa.jpg',
                 'descricao' => 'Mistério medieval num mosteiro beneditino.',
-                'preco' => 22.75,
+                'preco' => "22.75",
                 'autores' => ['Umberto Eco'],
             ],
         ];

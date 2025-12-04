@@ -170,9 +170,19 @@
             if (preco) {
                 data = data.filter((livro) => {
                     const p = parsePrecoNum(livro.preco);
-                    if (preco === "0-20") return p >= 0 && p < 20;
-                    if (preco === "20-40") return p >= 20 && p < 40;
-                    if (preco === "40+") return p >= 40;
+
+                    // Faixa dinâmica “X-Y”
+                    if (preco.includes("-")) {
+                        const [min, max] = preco.split("-").map(parseFloat);
+                        return p >= min && p <= max;
+                    }
+
+                    // Valor “Y+”
+                    if (preco.endsWith("+")) {
+                        const min = parseFloat(preco);
+                        return p >= min;
+                    }
+
                     return true;
                 });
             }

@@ -11,23 +11,29 @@ class LivroController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->input('q');
+        $query = trim($request->input('q'));
 
         $livros = Livro::with(['editora', 'autores'])
-            ->when($query, function ($q) use ($query) {
-                $q->where('nome', 'like', "%$query%")
-                ->orWhere('isbn', 'like', "%$query%")
-                ->orWhereHas('autores', function ($q) use ($query) {
-                    $q->where('nome', 'like', "%$query%");
-                })
-                ->orWhereHas('editora', function ($q) use ($query) {
-                    $q->where('nome', 'like', "%$query%");
+            ->when($query, function ($qBuilder) use ($query) {
+
+                $qBuilder->where(function ($sub) use ($query) {
+
+                    $sub->where('nome', 'like', "%{$query}%")   // título
+                        ->orWhere('isbn', 'like', "%{$query}%") // isbn
+                        ->orWhereHas('editora', function ($q) use ($query) {
+                            $q->where('nome', 'like', "%{$query}%");
+                        })
+                        ->orWhereHas('autores', function ($q) use ($query) {
+                            $q->where('nome', 'like', "%{$query}%");
+                        });
                 });
             })
-            ->paginate(15);
+            ->orderBy('nome')
+            ->paginate(12);
 
         return view('livros.index', compact('livros', 'query'));
     }
+
 
     public function show(Livro $livro)
     {
@@ -85,8 +91,8 @@ class LivroController extends Controller
         }
 
         $relacionados = Livro::relacionados($livro, 3);
-        
-        // === 📚 LIVROS RELACIONADOS INTELIGENTES (TF-IDF + cosine) ===
+
+        // LIVROS RELACIONADOS INTELIGENTES 
         $service = new BookSimilarityService();
         $relacionados = $service->getRelatedBooks($livro, 3);
 
@@ -103,7 +109,7 @@ class LivroController extends Controller
 
     }
 
-    // 📌 SUBMETER / EDITAR REVIEW
+    // SUBMETER / EDITAR REVIEW
     public function review(Request $request, Livro $livro)
     {
         $request->validate([

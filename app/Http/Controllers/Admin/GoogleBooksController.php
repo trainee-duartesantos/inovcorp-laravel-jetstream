@@ -61,12 +61,24 @@ class GoogleBooksController extends Controller
         $capaPath = null;
         if (isset($volume['imageLinks']['thumbnail'])) {
             $url = $volume['imageLinks']['thumbnail'];
-            $image = file_get_contents($url);
-            $filename = 'capas/' . uniqid() . '.jpg';
 
-            Storage::disk('public')->put($filename, $image);
-            $capaPath = $filename;
+            // força https (evita erro de navegação)
+            $url = str_replace('http://', 'https://', $url);
+
+            try {
+                $image = file_get_contents($url);
+                $filename = 'capas/' . uniqid() . '.jpg';
+
+                Storage::disk('public')->put($filename, $image);
+
+                // caminho correto que o dashboard.js interpreta
+                $capaPath = 'storage/' . $filename;
+
+            } catch (\Exception $e) {
+                $capaPath = null;
+            }
         }
+
 
         // 📌 Criar livro
         $livro = \App\Models\Livro::create([
