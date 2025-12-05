@@ -55,7 +55,7 @@
                     ✨ Minhas Requisições
                 </a>
                 <a href="{{ route('admin.requisicoes.index') }}" class="btn btn-outline btn-secondary">
-                    🔁 Gestão de Requisições
+                    🔁 Painel de Administração
                 </a>
                 <a href="{{ route('admin.reviews.index') }}" class="btn btn-outline btn-secondary">
                     ⭐ Gestão de Reviews
@@ -274,10 +274,10 @@
     </footer>
     <script>
         window.DATA = {
+            storageBaseUrl: "{{ asset('storage') }}",
             livros: @json($livros),
             autores: @json($autores),
-            editoras: @json($editoras),
-            storageBaseUrl: "{{ asset('storage') }}"
+            editoras: @json($editoras)
         };
 
         function showTab(tab) {

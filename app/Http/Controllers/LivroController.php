@@ -9,6 +9,8 @@ use App\Services\BookSimilarityService;
 use App\Models\AlertaLivro;
 use App\Mail\LivroDisponivelMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ReviewSubmittedMail;
+use App\Models\User;
 
 class LivroController extends Controller
 {
@@ -124,16 +126,28 @@ class LivroController extends Controller
             ['user_id' => auth()->id()],
             [
                 'rating' => $request->rating,
-                'comment' => $request->comment
+                'comment' => $request->comment,
+                'status'  => 0 // review suspensa até aprovação do admin
             ]
         );
 
+        // Obter todos os admins
+        $admins = User::whereHas('roles', function($q){
+            $q->where('slug', 'admin');
+        })->get();
+
+        // Enviar email a cada admin
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new ReviewSubmittedMail($review));
+        }
+        
         return back()->with('success', $review->wasRecentlyCreated
             ? 'Avaliação registada! ⭐'
             : 'Avaliação atualizada! ⭐'
         );
     }
 
+    // Alerta disponibilidade do livro
     public function alerta(Livro $livro)
     {
         if ($livro->disponivel) {

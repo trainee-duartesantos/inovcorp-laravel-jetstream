@@ -69,6 +69,11 @@ Route::middleware([
         Route::put('/admin/reviews/{review}', [ReviewAdminController::class, 'updateStatus'])
         ->name('admin.reviews.update');
 
+        Route::get('/admin/utilizadores', [\App\Http\Controllers\Admin\UserController::class, 'index'])
+            ->name('admin.utilizadores');
+
+        Route::post('/admin/utilizadores/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])
+            ->name('admin.utilizadores.updateRole');
 
 
         // ✅ NOVA ROTA: teste simples à Google Books API

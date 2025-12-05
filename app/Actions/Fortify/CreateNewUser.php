@@ -26,10 +26,24 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        // Normal registration (always citizen role)
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        /**
+         * 🔹 Atribui automaticamente o role "Cidadão"
+         *   IMPORTANTE: certifica-te que o ID 2 corresponde ao role "Cidadão"
+         */
+        try {
+            $user->roles()->sync([2]); // ID do papel "Cidadão"
+        } catch (\Exception $e) {
+            // Evita crash se o role ainda não existir após fresh migrate
+            logger("Falha ao atribuir role cidadão: ".$e->getMessage());
+        }
+
+        return $user;
     }
 }

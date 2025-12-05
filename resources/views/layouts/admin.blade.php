@@ -51,6 +51,13 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.utilizadores') }}"
+                class="{{ request()->routeIs('admin.utilizadores') ? 'active bg-base-100 font-semibold' : '' }}">
+                    👥 Gestão de Utilizadores
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('admin.requisicoes.index') }}"
                 class="{{ request()->routeIs('admin.requisicoes.index') ? 'active bg-base-100 font-semibold' : '' }}">
                     🔁 Requisições

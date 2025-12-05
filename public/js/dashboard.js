@@ -107,7 +107,7 @@
         return raw.map((autor) => ({
             id: autor.id,
             nome: autor.nome,
-            foto_url: autor.foto_url || autor.foto || null,
+            foto_url: autor.foto_url ?? autor.foto ?? null,
         }));
     }
 
@@ -116,7 +116,7 @@
         return raw.map((editora) => ({
             id: editora.id,
             nome: editora.nome,
-            logo_url: editora.logo_url || editora.logo || null,
+            logo_url: editora.logo_url ?? editora.logo ?? null,
         }));
     }
 
@@ -475,7 +475,8 @@
 
         let html = "";
         pageItems.forEach((autor) => {
-            const foto = imageUrl(autor.foto_url);
+            const foto =
+                imageUrl(autor.foto_url) || "https://via.placeholder.com/80";
             html += `
                 <tr>
                     <td>${escapeHtml(autor.nome)}</td>
@@ -516,7 +517,8 @@
 
         let html = "";
         pageItems.forEach((editora) => {
-            const logo = imageUrl(editora.logo_url);
+            const logo =
+                imageUrl(editora.logo_url) || "https://via.placeholder.com/80";
             html += `
                 <tr>
                     <td>${escapeHtml(editora.nome)}</td>
