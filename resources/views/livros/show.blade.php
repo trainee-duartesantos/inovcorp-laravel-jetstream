@@ -47,6 +47,24 @@
                     🔐 Iniciar sessão
                 </a>
             @endauth
+
+            <!-- Carrinho -->
+            @auth
+                <form action="{{ route('cart.add', $livro) }}" method="POST" class="mt-2">
+                    @csrf
+                    <button class="btn btn-success">
+                        🛒 Adicionar ao Carrinho
+                    </button>
+                </form>
+            @endauth
+
+            @guest
+                <a href="{{ route('login') }}" class="btn btn-success mt-2">
+                    🛒 Adicionar ao Carrinho (login necessário)
+                </a>
+            @endguest
+
+                <!-- Botão disponibilidade -->
                 @if(!$livro->disponivel)
                     <form method="POST" action="{{ route('livros.alerta', $livro->id) }}">
                         @csrf

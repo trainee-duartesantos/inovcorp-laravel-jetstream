@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RequisicaoAdminController;
 use App\Http\Controllers\LivroController;
 use App\Http\Controllers\Admin\GoogleBooksController;
 use App\Http\Controllers\Admin\ReviewAdminController;
+use App\Http\Controllers\CartController;
 
 
 
@@ -95,6 +96,12 @@ Route::middleware([
         Route::post('/livros/{livro}/alerta', [LivroController::class, 'alerta'])
             ->middleware('auth')
             ->name('livros.alerta');
+
+        Route::post('/carrinho/{livro}/adicionar', [CartController::class, 'add'])
+            ->name('cart.add');
+
+        Route::get('/carrinho', [CartController::class, 'index'])
+            ->name('cart.index');
 
 
     // Export CSV
