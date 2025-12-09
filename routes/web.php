@@ -10,6 +10,7 @@ use App\Http\Controllers\LivroController;
 use App\Http\Controllers\Admin\GoogleBooksController;
 use App\Http\Controllers\Admin\ReviewAdminController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 
 
@@ -68,7 +69,7 @@ Route::middleware([
             ->name('admin.reviews.index');
 
         Route::put('/admin/reviews/{review}', [ReviewAdminController::class, 'updateStatus'])
-        ->name('admin.reviews.update');
+            ->name('admin.reviews.update');
 
         Route::get('/admin/utilizadores', [\App\Http\Controllers\Admin\UserController::class, 'index'])
             ->name('admin.utilizadores');
@@ -102,6 +103,18 @@ Route::middleware([
 
         Route::get('/carrinho', [CartController::class, 'index'])
             ->name('cart.index');
+
+        Route::delete('/carrinho/{item}/remover', [CartController::class, 'remove'])
+            ->middleware('auth')
+            ->name('cart.remove');
+
+    Route::middleware(['auth'])->group(function(){
+
+        Route::get('/checkout/morada', [CheckoutController::class, 'address'])
+            ->name('checkout.address');
+
+    });
+
 
 
     // Export CSV

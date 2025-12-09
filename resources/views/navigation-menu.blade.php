@@ -19,6 +19,27 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                {{-- Carrinho de compras (fora de qualquer IF) --}}
+                <div class="ms-4 flex items-center">
+                    <a href="{{ route('cart.index') }}"
+                    class="relative inline-flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 transition">
+                        🛒
+
+                        @php
+                            $cartCount = auth()->check()
+                                ? \App\Models\CartItem::whereHas('cart', function($q){
+                                    $q->where('user_id', auth()->id());
+                                })->sum('quantity')
+                                : 0;
+                        @endphp
+
+                        @if($cartCount > 0)
+                            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
+                    </a>
+                </div>
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">

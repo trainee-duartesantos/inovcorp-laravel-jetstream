@@ -43,10 +43,26 @@ class CartController extends Controller
 
     public function index()
     {
-        $cart = $this->getCart();
+        $user = auth()->user();
 
-        $items = $cart->items()->with('livro')->get();
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
 
-        return view('cart.index', compact('items'));
+        $cart->load('items.livro.autores');
+
+        $total = $cart->items->sum(fn($item) => $item->livro->preco);
+
+        return view('cart.index', compact('cart','total'));
     }
+
+    public function remove(CartItem $item)
+    {
+        if ($item->cart->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $item->delete();
+
+        return back()->with('success', 'Livro removido do carrinho!');
+    }
+
 }
