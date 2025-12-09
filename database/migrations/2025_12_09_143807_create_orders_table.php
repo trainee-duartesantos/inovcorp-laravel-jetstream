@@ -13,28 +13,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-            // Morada da entrega
-            $table->string('rua');
-            $table->string('porta');
-            $table->string('postal');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('nome');
+            $table->string('email');
+            $table->string('morada');
             $table->string('cidade');
-
-            // Estado da ordem
-            $table->enum('status', ['pendente', 'pago', 'cancelado'])->default('pendente');
-
-            // Total final da compra
-            $table->decimal('total', 10, 2);
-
+            $table->string('codigo_postal');
+            $table->string('telefone')->nullable();
+            $table->decimal('total', 8, 2)->default(0);
+            $table->enum('status', ['pendente', 'pago'])->default('pendente'); // estado pagamento
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('orders');
     }

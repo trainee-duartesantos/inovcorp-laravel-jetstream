@@ -113,6 +113,12 @@ Route::middleware([
         Route::get('/checkout/morada', [CheckoutController::class, 'address'])
             ->name('checkout.address');
 
+        Route::post('/checkout/morada', [CheckoutController::class, 'storeAddress'])
+            ->name('checkout.address.store');
+
+        Route::get('/checkout/pagamento/{order}', [CheckoutController::class, 'payment'])
+            ->name('checkout.payment');
+
     });
 
 

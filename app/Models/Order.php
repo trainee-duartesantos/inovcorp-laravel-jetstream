@@ -8,12 +8,14 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
-        'rua',
-        'porta',
-        'postal',
+        'nome',
+        'email',
+        'morada',
         'cidade',
-        'status',
+        'codigo_postal',
+        'telefone',
         'total',
+        'status',
     ];
 
     public function user()
