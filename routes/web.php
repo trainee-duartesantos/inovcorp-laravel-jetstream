@@ -123,7 +123,7 @@ Route::middleware([
         Route::post('/checkout/stripe/{order}', [StripeController::class, 'createStripeSession'])
             ->name('checkout.stripe');
 
-        Route::get('/checkout/sucesso/{order}', [CheckoutController::class, 'success'])
+        Route::get('/checkout/sucesso/{order}', [\App\Http\Controllers\StripeController::class, 'success'])
             ->name('checkout.success');
 
     });

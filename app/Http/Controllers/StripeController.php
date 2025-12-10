@@ -41,4 +41,20 @@ class StripeController extends Controller
 
         return redirect()->away($session->url);
     }
+
+    public function success(Order $order)
+    {
+        // impedir duplicação
+        if ($order->status !== 'pago') {
+            $order->update([
+                'status' => 'pago'
+            ]);
+
+            // aqui podemos limpar carrinho...
+            auth()->user()->cart?->items()->delete();
+        }
+
+        return view('checkout.success', compact('order'));
+    }
+
 }
