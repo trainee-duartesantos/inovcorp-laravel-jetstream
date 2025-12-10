@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\GoogleBooksController;
 use App\Http\Controllers\Admin\ReviewAdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\StripeController;
 
 
 
@@ -118,6 +119,12 @@ Route::middleware([
 
         Route::get('/checkout/pagamento/{order}', [CheckoutController::class, 'payment'])
             ->name('checkout.payment');
+
+        Route::post('/checkout/stripe/{order}', [StripeController::class, 'createStripeSession'])
+            ->name('checkout.stripe');
+
+        Route::get('/checkout/sucesso/{order}', [CheckoutController::class, 'success'])
+            ->name('checkout.success');
 
     });
 

@@ -16,12 +16,16 @@
     </p>
 
     <p class="mt-6 text-gray-600">
-        👉 Aqui será exibido o formulário de pagamento Stripe ⚡
+        👉 Clique abaixo para pagar com Stripe ⚡
     </p>
 
-    <button class="mt-6 bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700">
-        💸 Simular Pagamento
-    </button>
+    <form action="{{ route('checkout.stripe', $order->id) }}" method="POST">
+        @csrf
+        <button class="mt-6 bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700">
+            💳 Pagar com Stripe
+        </button>
+    </form>
+
 
     <a href="{{ route('dashboard') }}"
        class="mt-6 ml-3 inline-block px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400">

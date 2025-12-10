@@ -10,7 +10,8 @@ class OrderItem extends Model
         'order_id',
         'livro_id',
         'quantity',
-        'price'
+        'preco_unitario',
+        'subtotal',
     ];
 
     public function order()
@@ -20,7 +21,7 @@ class OrderItem extends Model
 
     public function livro()
     {
-        return $this->belongsTo(Livro::class);
+        return $this->belongsTo(\App\Models\Livro::class);
     }
-}
 
+}

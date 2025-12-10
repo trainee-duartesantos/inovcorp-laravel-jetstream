@@ -48,6 +48,19 @@ class CheckoutController extends Controller
             'total'         => $total,
         ]);
 
+        foreach ($cart->items as $item) {
+            $order->items()->create([
+                'livro_id' => $item->livro_id,
+                'quantity' => $item->quantity,
+                'preco_unitario' => $item->livro->preco,
+                'subtotal' => $item->livro->preco * $item->quantity,
+            ]);
+        }
+
+        // LIMPAR carrinho após checkout
+        $cart->items()->delete();
+        $cart->delete();
+
         // Enviar para Stripe
         return redirect()->route('checkout.payment', $order->id);
     }
@@ -56,4 +69,13 @@ class CheckoutController extends Controller
     {
         return view('checkout.payment', compact('order'));
     }
+
+    public function success(Order $order)
+    {
+        $order->status = 'pago';
+        $order->save();
+
+        return view('checkout.success', compact('order'));
+    }
+
 }
