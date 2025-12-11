@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ReviewAdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StripeController;
+use app\Http\Controllers\AdminEncomendasController;
 
 
 
@@ -77,6 +78,16 @@ Route::middleware([
 
         Route::post('/admin/utilizadores/{user}/role', [\App\Http\Controllers\Admin\UserController::class, 'updateRole'])
             ->name('admin.utilizadores.updateRole');
+
+        // ADMIN - Encomendas
+        Route::get('/admin/encomendas', [App\Http\Controllers\AdminEncomendasController::class, 'index'])
+            ->name('admin.encomendas');
+
+        Route::get('/admin/encomendas/{order}', [App\Http\Controllers\AdminEncomendasController::class, 'show'])
+            ->name('admin.encomendas.show');
+
+        Route::post('/admin/encomendas/{order}/estado', [App\Http\Controllers\AdminEncomendasController::class, 'updateStatus'])
+            ->name('admin.encomendas.updateStatus');
 
 
         // ✅ NOVA ROTA: teste simples à Google Books API

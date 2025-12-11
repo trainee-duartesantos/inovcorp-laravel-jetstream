@@ -58,6 +58,13 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.encomendas') }}"
+                class="{{ request()->routeIs('admin.encomendas') ? 'active bg-base-100 font-semibold' : '' }}">
+                    📦 Encomendas
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('admin.requisicoes.index') }}"
                 class="{{ request()->routeIs('admin.requisicoes.index') ? 'active bg-base-100 font-semibold' : '' }}">
                     🔁 Requisições
@@ -79,7 +86,8 @@
             </li>
 
 
-            <li><a href="{{ route('dashboard') }}">📊 Dashboard</a></li>
+            <li>
+                <a href="{{ route('dashboard') }}">📊 Dashboard</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -88,7 +96,6 @@
                             </button>
                         </form>
                     </li>
-
         </ul>
     </div>
     @endif
