@@ -13,6 +13,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StripeController;
 use app\Http\Controllers\AdminEncomendasController;
+use App\Http\Controllers\UserOrdersController;
 
 
 
@@ -137,6 +138,11 @@ Route::middleware([
         Route::get('/checkout/sucesso/{order}', [StripeController::class, 'success'])
             ->name('checkout.success');
 
+        Route::get('/encomendas', [UserOrdersController::class, 'index'])
+            ->name('user.orders');
+
+        Route::get('/encomendas/{order}', [UserOrdersController::class, 'show'])
+            ->name('user.orders.show');
     });
 
 

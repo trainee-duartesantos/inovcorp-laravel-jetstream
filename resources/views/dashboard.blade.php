@@ -54,6 +54,9 @@
                 <a href="{{ route('requisicoes.index') }}" class="btn btn-outline btn-secondary">
                     ✨ Minhas Requisições
                 </a>
+                <a href="{{ route('user.orders') }}" class="btn btn-outline btn-secondary">
+                    📦 As minhas encomendas
+                </a>
                 <a href="{{ route('admin.requisicoes.index') }}" class="btn btn-outline btn-secondary">
                     🔁 Painel de Administração
                 </a>
