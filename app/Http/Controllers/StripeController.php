@@ -6,6 +6,8 @@ use App\Models\Order;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Http\Request;
+use App\Mail\OrderPaidMail;
+use Illuminate\Support\Facades\Mail;
 
 class StripeController extends Controller
 {
@@ -44,14 +46,26 @@ class StripeController extends Controller
 
     public function success(Order $order)
     {
-        // impedir duplicação
-        if ($order->status !== 'pago') {
-            $order->update([
-                'status' => 'pago'
-            ]);
+        // Só o dono da encomenda pode ver
+        if (auth()->check() && $order->user_id !== auth()->id()) {
+            abort(403, 'Acesso não autorizado.');
+        }
 
-            // aqui podemos limpar carrinho...
-            auth()->user()->cart?->items()->delete();
+        // Se já estiver pago, não reenviar mail nem alterar
+        $primeiraVezPago = false;
+
+        if ($order->status !== 'pago') {
+            $order->status = 'pago';
+            $order->save();
+            $primeiraVezPago = true;
+        }
+
+        // Carregar items + livros para o e-mail
+        $order->load('items.livro');
+
+        // Só envia e-mail na primeira vez que marca como pago
+        if ($primeiraVezPago) {
+            Mail::to($order->email)->send(new OrderPaidMail($order));
         }
 
         return view('checkout.success', compact('order'));
