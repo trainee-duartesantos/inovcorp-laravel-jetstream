@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Livro extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'isbn',
+        'isbn_hash',
         'nome',
         'editora_id',
         'bibliografia',
@@ -26,6 +31,12 @@ class Livro extends Model
 
     public function setIsbnAttribute($value)
     {
+        if (!$value) return;
+
+        // Hash SEMPRE do valor em claro
+        $this->attributes['isbn_hash'] = hash('sha256', $value);
+
+        // Cifra o valor
         $this->attributes['isbn'] = Crypt::encryptString($value);
     }
 
@@ -122,5 +133,4 @@ class Livro extends Model
             ->take($limit)
             ->pluck('livro');
     }
-
 }

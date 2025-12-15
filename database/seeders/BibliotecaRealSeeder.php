@@ -89,8 +89,21 @@ class BibliotecaRealSeeder extends Seeder
         ];
 
         $livroIds = [];
+
         foreach ($livrosData as $livroData) {
-            $livro = Livro::create($livroData);
+
+            $isbn = $livroData['isbn'];
+
+            $livro = Livro::create([
+                'isbn'       => $isbn,
+                'nome'       => $livroData['nome'],
+                'editora_id' => $livroData['editora_id'],
+                'bibliografia' => $livroData['bibliografia'],
+                'preco'      => $livroData['preco'],
+                'capa_url'   => $livroData['capa_url'],
+                'disponivel' => true,
+            ]);
+
             $livroIds[$livroData['nome']] = $livro->id;
         }
 

@@ -57,7 +57,7 @@ class Requisicao extends Model
     // Escopo para requisicoes ativas (ainda não devolvidas)
     public function scopeAtivas($query)
     {
-        return $query->where('estado', 'pending');
+        return $query->where('estado', 'ativa');
     }
     
     public function getDiasDecorridosAttribute()

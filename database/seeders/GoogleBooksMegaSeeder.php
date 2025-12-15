@@ -13,12 +13,19 @@ class GoogleBooksMegaSeeder extends Seeder
 {
     public function run()
     {
+        $this->command->info('🚀 GoogleBooksMegaSeeder STARTED');
+        
         $temas = [
             'fiction',
             'science',
             'fantasy',
             'history',
-            'business'
+            'business',
+            'technology',
+            'philosophy',
+            'psychology',
+            'art',
+            'music'
         ];
 
         $totalCriados = 0;
@@ -26,11 +33,19 @@ class GoogleBooksMegaSeeder extends Seeder
         foreach ($temas as $tema) {
             $this->command->info("📚 A importar livros do tema: $tema");
 
-            // Google Books devolve máx. 40, vamos buscar 20
-            $response = Http::get('https://www.googleapis.com/books/v1/volumes', [
-                'q'         => $tema,
-                'maxResults'=> 20,
-            ]);
+            try {
+                // Google Books devolve máx. 40, vamos buscar 20
+                $response = Http::withoutVerifying()->get(
+                    'https://www.googleapis.com/books/v1/volumes',
+                    [
+                        'q' => $tema,
+                        'maxResults' => 40,
+                    ]
+                );
+            } catch (\Exception $e) {
+                $this->command->error("❌ Falha SSL / HTTP para o tema: $tema");
+                continue;
+            }
 
             $dados = $response->json();
 
@@ -43,10 +58,24 @@ class GoogleBooksMegaSeeder extends Seeder
                 $info = $item['volumeInfo'] ?? [];
 
                 // 1️⃣ ISBN obrigatório para evitar duplicação
-                $isbn = $info['industryIdentifiers'][0]['identifier'] ?? null;
-                if (!$isbn) continue;
+                $isbn = null;
 
-                if (Livro::where('isbn', $isbn)->exists()) continue;
+                if (isset($info['industryIdentifiers'])) {
+                    foreach ($info['industryIdentifiers'] as $identifier) {
+                        if (in_array($identifier['type'], ['ISBN_13', 'ISBN_10'])) {
+                            $isbn = $identifier['identifier'];
+                            break;
+                        }
+                    }
+                }
+
+                if (!$isbn) {
+                    continue;
+                }
+
+                $isbnHash = hash('sha256', $isbn);
+
+                if (Livro::where('isbn_hash', $isbnHash)->exists()) continue;
 
                 // 2️⃣ Editora
                 $editoraNome = $info['publisher'] ?? 'Editora desconhecida';
