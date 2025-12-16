@@ -10,6 +10,7 @@ use App\Mail\RequisicaoCreatedMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Services\AuditLogger;
 
 
 
@@ -93,4 +94,36 @@ class RequisicaoController extends Controller
         return back()->with('success', 'Requisição criada com sucesso!');
     }
 
+    public function devolver(Requisicao $requisicao)
+    {
+        // Garantir que só o dono pode devolver
+        if ($requisicao->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $requisicao->update([
+            'estado' => 'entregue',
+            'data_entrega' => now(),
+        ]);
+
+        $requisicao->livro->update([
+            'disponivel' => true,
+        ]);
+
+        AuditLogger::log(
+            module: 'requisicoes',
+            action: 'returned',
+            objectId: $requisicao->id,
+            changes: [
+                'estado' => ['old' => 'ativa', 'new' => 'entregue'],
+            ]
+        );
+
+        // 👇 ESTE BLOCO É O SEGREDO
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return back()->with('success', 'Livro devolvido com sucesso.');
+    }
 }

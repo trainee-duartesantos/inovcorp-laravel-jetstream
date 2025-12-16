@@ -15,8 +15,6 @@ use App\Http\Controllers\StripeController;
 use app\Http\Controllers\AdminEncomendasController;
 use App\Http\Controllers\UserOrdersController;
 
-
-
 Route::get('/welcome', function () {
     return view('welcome');
 });
@@ -99,6 +97,9 @@ Route::middleware([
         // Rotas Cidadão/Admin (próprio utilizador)
         Route::get('/requisicoes', [RequisicaoController::class, 'index'])
             ->name('requisicoes.index');
+
+        /**Route::post('/requisicoes/{requisicao}/devolver', [RequisicaoController::class, 'devolver'])
+            ->name('requisicoes.devolver');*/
 
         Route::post('/requisicoes', [RequisicaoController::class, 'store'])
             ->name('requisicoes.store');
