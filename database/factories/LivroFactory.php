@@ -13,14 +13,13 @@ class LivroFactory extends Factory
     public function definition(): array
     {
         return [
-            'isbn'         => fake()->isbn13(),
-            'nome'         => fake()->sentence(3),
-            'editora_id'   => Editora::factory(),
-            'bibliografia' => fake()->paragraph(),
-            'preco'        => fake()->randomFloat(2, 5, 50),
-            'disponivel'   => true,
-            'capa_url'     => null,
-            'capa'         => null,
+            'isbn' => $this->faker->isbn13(),
+            'isbn_hash' => hash('sha256', $this->faker->isbn13()),
+            'nome' => $this->faker->sentence(3),
+            'editora_id' => Editora::factory(),
+            'bibliografia' => $this->faker->paragraph(),
+            'preco' => '10.00',
+            'disponivel' => true,
         ];
     }
 }

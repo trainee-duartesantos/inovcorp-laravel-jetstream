@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Http\Middleware\AdminOnly;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Requisicao;
+use App\Observers\RequisicaoObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-         Route::aliasMiddleware('admin', AdminOnly::class);
+         Requisicao::observe(RequisicaoObserver::class);
     }
 }
