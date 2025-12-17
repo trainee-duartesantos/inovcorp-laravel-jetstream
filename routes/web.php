@@ -98,8 +98,8 @@ Route::middleware([
         Route::get('/requisicoes', [RequisicaoController::class, 'index'])
             ->name('requisicoes.index');
 
-        /**Route::post('/requisicoes/{requisicao}/devolver', [RequisicaoController::class, 'devolver'])
-            ->name('requisicoes.devolver');*/
+        Route::post('/requisicoes/{requisicao}/devolver', [RequisicaoController::class, 'devolver'])
+            ->name('requisicoes.devolver');
 
         Route::post('/requisicoes', [RequisicaoController::class, 'store'])
             ->name('requisicoes.store');

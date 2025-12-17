@@ -8,7 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->post(
+/**Route::middleware('auth:sanctum')->post(
     '/requisicoes/{requisicao}/devolver',
     [RequisicaoController::class, 'devolver']
-)->name('requisicoes.devolver');
+)->name('requisicoes.devolver');*/

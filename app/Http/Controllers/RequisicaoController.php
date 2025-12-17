@@ -119,7 +119,7 @@ class RequisicaoController extends Controller
             ]
         );
 
-        // 👇 ESTE BLOCO É O SEGREDO
+        // JSON
         if (request()->expectsJson()) {
             return response()->json(['success' => true]);
         }
