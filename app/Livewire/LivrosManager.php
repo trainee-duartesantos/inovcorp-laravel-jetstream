@@ -19,7 +19,7 @@ class LivrosManager extends Component
     public $search = '';
     public $modalOpen = false;
     public $modalDeleteOpen = false;
-
+    public $disponivel = true;
     public $livro_id;
     public $isbn;
     public $nome;
@@ -62,6 +62,7 @@ class LivrosManager extends Component
         $this->bibliografia = '';
         $this->capa = null;
         $this->capa_atual = null;
+        $this->disponivel = true;
     }
 
     public function store()
@@ -81,6 +82,7 @@ class LivrosManager extends Component
                 'bibliografia' => $this->bibliografia,
                 'preco' => $this->preco,
                 'capa_url' => $capaUrl,
+                'disponivel' => $this->disponivel,
             ]
         );
 
@@ -94,6 +96,8 @@ class LivrosManager extends Component
         );
 
         $this->closeModal();
+
+        $this->resetPage();
     }
 
     public function edit($id)
@@ -107,7 +111,7 @@ class LivrosManager extends Component
         $this->bibliografia = $livro->bibliografia;
         $this->autores_id = $livro->autores->pluck('id')->toArray();
         $this->capa_atual = $livro->capa_url;
-
+        $this->disponivel = $livro->disponivel;
         $this->modalOpen = true;
     }
 
@@ -131,7 +135,7 @@ class LivrosManager extends Component
 
     public function render()
     {
-        $livros = \App\Models\Livro::with(['editora', 'autores'])
+        $livros = Livro::with(['editora', 'autores'])
             ->where(function ($query) {
                 $query->where('nome', 'LIKE', '%' . $this->search . '%')
                     ->orWhereEncrypted('isbn', 'LIKE', '%' . $this->search . '%')
@@ -141,10 +145,13 @@ class LivrosManager extends Component
             })
             ->paginate(10);
 
-        return view('livewire.livros-manager', compact('livros'));
+        $editoras = Editora::orderBy('nome')->get();
+        $autores  = Autor::orderBy('nome')->get();
+
+        return view('livewire.livros-manager', compact(
+            'livros',
+            'editoras',
+            'autores'
+        ));
     }
-
-
-
-
 }

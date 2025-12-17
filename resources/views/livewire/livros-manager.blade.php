@@ -9,10 +9,10 @@
 
     {{-- Pesquisa --}}
     <input type="text"
-       wire:model.debounce.500ms="search"
-       placeholder="Pesquisar por nome, ISBN, autor..."
-       class="input input-bordered w-full">
-    
+        wire:model.debounce.500ms="search"
+        wire:keydown.enter.prevent="$set('search', $event.target.value)"
+        placeholder="Pesquisar por nome, ISBN, autor..."
+        class="input input-bordered w-full">    
 
     {{-- Tabela --}}
     <div class="overflow-x-auto bg-base-100 shadow rounded-lg">
@@ -68,7 +68,9 @@
                     {{ $livro_id ? 'Editar Livro' : 'Novo Livro' }}
                 </h2>
 
-                <form wire:submit.prevent="store" class="space-y-3">
+                <form wire:submit.prevent="store"
+                    enctype="multipart/form-data"
+                    class="space-y-3">
 
                     <input type="text" wire:model="isbn" class="input input-bordered w-full"
                            placeholder="ISBN">
@@ -94,6 +96,11 @@
                                 <option value="{{ $autor->id }}">{{ $autor->nome }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" wire:model="disponivel" class="checkbox checkbox-success">
+                        <span>Livro disponível para requisição</span>
                     </div>
 
                     <textarea wire:model="bibliografia"

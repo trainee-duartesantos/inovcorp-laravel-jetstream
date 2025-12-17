@@ -53,12 +53,16 @@ class RequisicaoController extends Controller
         $livro = Livro::findOrFail($request->livro_id);
 
         // 1️⃣ Verificar se o livro está requisitado
+        if (!$livro->disponivel) {
+            return back()->with('error', 'Este livro não está disponível para requisição.');
+        }
+
         $jaRequisitado = Requisicao::where('livro_id', $livro->id)
             ->where('estado', 'ativa')
             ->exists();
 
-        if ($jaRequisitado || !$livro->disponivel) {
-            return back()->with('error', 'Este livro não está disponível para requisição.');
+        if ($jaRequisitado) {
+            return back()->with('error', 'Este livro já se encontra requisitado.');
         }
 
         // 2️⃣ Verificar limite de 3 requisições
