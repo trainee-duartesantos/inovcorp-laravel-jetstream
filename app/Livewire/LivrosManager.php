@@ -37,7 +37,7 @@ class LivrosManager extends Component
         'autores_id' => 'required|array|min:1',
         'preco' => 'required|numeric',
         'bibliografia' => 'nullable|string',
-        'capa' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'capa' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
     ];
 
     public function openModal()
@@ -96,7 +96,7 @@ class LivrosManager extends Component
         );
 
         $this->closeModal();
-
+        $this->reset('capa');
         $this->resetPage();
     }
 

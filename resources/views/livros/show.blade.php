@@ -13,8 +13,9 @@
     <div class="bg-base-100 p-6 rounded-xl shadow-xl flex flex-col lg:flex-row gap-8">
 
         {{-- Capa --}}
-        <img src="{{ $livro->capa_url ? asset('storage/'.$livro->capa_url) : 'https://via.placeholder.com/150' }}"
-             class="w-44 h-64 object-cover rounded-md shadow-md">
+        <img src="{{ $livro->capa_final }}"
+            class="w-44 h-64 object-cover rounded-md shadow-md"
+            alt="{{ $livro->nome }}">
 
         {{-- Informações --}}
         <div class="flex-1 space-y-2">

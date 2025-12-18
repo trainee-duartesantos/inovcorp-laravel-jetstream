@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Requisicao;
 
 
 class Livro extends Model
@@ -95,12 +96,19 @@ class Livro extends Model
         return $this->hasMany(\App\Models\Requisicao::class);
     }
 
-    public function getDisponivelAttribute()
+    public function getDisponivelAttribute($value)
     {
+        // 1️⃣ Se a BD diz que não está disponível
+        if (!$value) {
+            return false;
+        }
+
+        // 2️⃣ Se existe uma requisição ativa, também não está disponível
         return !Requisicao::where('livro_id', $this->id)
-        ->where('estado', 'ativa')
-        ->exists();
+            ->where('estado', 'ativa')
+            ->exists();
     }
+
     public function scopeOrWhereEncrypted($query, $column, $operator, $value)
     {
         return $query->orWhere(DB::raw("CAST(AES_DECRYPT($column, '" . config('app.key') . "') AS CHAR)"), $operator, $value);
@@ -133,4 +141,14 @@ class Livro extends Model
             ->take($limit)
             ->pluck('livro');
     }
+
+    public function getCapaFinalAttribute(): string
+{
+    if ($this->capa_url && file_exists(storage_path('app/public/' . $this->capa_url))) {
+        return asset('storage/' . $this->capa_url);
+    }
+
+    return asset('storage/images/placeholders/book-placeholder.png');
+}
+
 }

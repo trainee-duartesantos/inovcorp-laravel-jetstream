@@ -28,14 +28,9 @@
             <div class="bg-white shadow-lg rounded-xl p-4 hover:shadow-2xl transition border border-gray-200">
 
                 {{-- Capa --}}
-                @php
-                    $capa = $livro->capa_url
-                        ? asset('storage/' . $livro->capa_url)
-                        : asset('storage/images/placeholders/book-placeholder.png');
-                @endphp
-
-                <img src="{{ $capa }}" alt="{{ $livro->nome }}"
-                     class="w-full h-64 object-cover rounded-lg shadow">
+                <img src="{{ $livro->capa_final }}"
+                    alt="{{ $livro->nome }}"
+                    class="w-full h-64 object-cover rounded-lg shadow">
 
                 <div class="mt-4 space-y-1">
 
