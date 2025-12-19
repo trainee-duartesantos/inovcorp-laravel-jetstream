@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Livro;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     private function getCart()
     {
-        if (auth()->check()) {
-            return Cart::firstOrCreate(['user_id' => auth()->id()]);
+        if (Auth::check()) {
+            return Cart::firstOrCreate(['user_id' => Auth::id()]);
         }
 
         $session = session()->getId();
@@ -22,7 +23,7 @@ class CartController extends Controller
 
     public function add(Livro $livro)
     {
-        // 🚫 VERIFICAÇÃO DE DISPONIBILIDADE
+        // VERIFICAÇÃO DE DISPONIBILIDADE
         if (!$livro->disponivel) {
             return back()->with('error', '❌ Este livro não se encontra disponível no momento.');
         }
@@ -49,7 +50,7 @@ class CartController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
 
@@ -62,7 +63,7 @@ class CartController extends Controller
 
     public function remove(CartItem $item)
     {
-        if ($item->cart->user_id !== auth()->id()) {
+        if ($item->cart->user_id !== auth::id()) {
             abort(403);
         }
 

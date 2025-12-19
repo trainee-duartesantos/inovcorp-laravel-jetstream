@@ -98,12 +98,12 @@ class Livro extends Model
 
     public function getDisponivelAttribute($value)
     {
-        // 1️⃣ Se a BD diz que não está disponível
+        // Se a BD diz que não está disponível
         if (!$value) {
             return false;
         }
 
-        // 2️⃣ Se existe uma requisição ativa, também não está disponível
+        // Se existe uma requisição ativa, também não está disponível
         return !Requisicao::where('livro_id', $this->id)
             ->where('estado', 'ativa')
             ->exists();

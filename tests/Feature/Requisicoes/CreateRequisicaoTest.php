@@ -18,6 +18,7 @@ class CreateRequisicaoTest extends TestCase
     {
         Mail::fake();
 
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
         $livro = Livro::factory()->create([
             'disponivel' => true,
