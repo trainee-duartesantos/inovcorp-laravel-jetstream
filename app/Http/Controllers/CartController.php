@@ -22,6 +22,11 @@ class CartController extends Controller
 
     public function add(Livro $livro)
     {
+        // 🚫 VERIFICAÇÃO DE DISPONIBILIDADE
+        if (!$livro->disponivel) {
+            return back()->with('error', '❌ Este livro não se encontra disponível no momento.');
+        }
+
         $cart = $this->getCart();
 
         $item = CartItem::where('cart_id', $cart->id)
@@ -40,6 +45,7 @@ class CartController extends Controller
 
         return back()->with('success', 'Livro adicionado ao carrinho 🛒');
     }
+
 
     public function index()
     {

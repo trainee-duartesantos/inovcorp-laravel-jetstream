@@ -40,6 +40,18 @@
 
             <!-- Page Content -->
             <main class="p-6">
+                @if(session('error'))
+                    <div class="alert alert-error shadow-lg mb-4">
+                        <span>{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="alert alert-success shadow-lg mb-4">
+                        <span>{{ session('success') }}</span>
+                    </div>
+                @endif
+                
                 @yield('content')
             </main>
 
